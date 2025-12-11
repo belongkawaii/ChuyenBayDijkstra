@@ -31,21 +31,21 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MenuFlight));
             this.panelHeader = new System.Windows.Forms.Panel();
             this.panelFunction = new System.Windows.Forms.Panel();
-            this.grbChoice = new System.Windows.Forms.GroupBox();
             this.grbButton = new System.Windows.Forms.GroupBox();
-            this.label1 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
-            this.cbbStart = new System.Windows.Forms.ComboBox();
-            this.cbbEnd = new System.Windows.Forms.ComboBox();
-            this.cbbAddition = new System.Windows.Forms.ComboBox();
-            this.btnSearch = new System.Windows.Forms.Button();
-            this.btnAdd = new System.Windows.Forms.Button();
-            this.btnExit = new System.Windows.Forms.Button();
             this.btnClear = new System.Windows.Forms.Button();
+            this.btnExit = new System.Windows.Forms.Button();
+            this.btnAdd = new System.Windows.Forms.Button();
+            this.btnSearch = new System.Windows.Forms.Button();
+            this.grbChoice = new System.Windows.Forms.GroupBox();
+            this.cbbAddition = new System.Windows.Forms.ComboBox();
+            this.cbbEnd = new System.Windows.Forms.ComboBox();
+            this.cbbStart = new System.Windows.Forms.ComboBox();
+            this.label3 = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
             this.panelFunction.SuspendLayout();
-            this.grbChoice.SuspendLayout();
             this.grbButton.SuspendLayout();
+            this.grbChoice.SuspendLayout();
             this.SuspendLayout();
             // 
             // panelHeader
@@ -69,6 +69,61 @@
             this.panelFunction.Size = new System.Drawing.Size(1300, 264);
             this.panelFunction.TabIndex = 1;
             // 
+            // grbButton
+            // 
+            this.grbButton.Controls.Add(this.btnClear);
+            this.grbButton.Controls.Add(this.btnExit);
+            this.grbButton.Controls.Add(this.btnAdd);
+            this.grbButton.Controls.Add(this.btnSearch);
+            this.grbButton.Dock = System.Windows.Forms.DockStyle.Right;
+            this.grbButton.Location = new System.Drawing.Point(700, 0);
+            this.grbButton.Name = "grbButton";
+            this.grbButton.Size = new System.Drawing.Size(600, 264);
+            this.grbButton.TabIndex = 1;
+            this.grbButton.TabStop = false;
+            this.grbButton.Text = "Chức Năng";
+            // 
+            // btnClear
+            // 
+            this.btnClear.Font = new System.Drawing.Font("Times New Roman", 13.8F, System.Drawing.FontStyle.Italic);
+            this.btnClear.Location = new System.Drawing.Point(62, 161);
+            this.btnClear.Name = "btnClear";
+            this.btnClear.Size = new System.Drawing.Size(192, 56);
+            this.btnClear.TabIndex = 3;
+            this.btnClear.Text = "XÓA";
+            this.btnClear.UseVisualStyleBackColor = true;
+            // 
+            // btnExit
+            // 
+            this.btnExit.Font = new System.Drawing.Font("Times New Roman", 13.8F, System.Drawing.FontStyle.Italic);
+            this.btnExit.Location = new System.Drawing.Point(350, 161);
+            this.btnExit.Name = "btnExit";
+            this.btnExit.Size = new System.Drawing.Size(192, 56);
+            this.btnExit.TabIndex = 2;
+            this.btnExit.Text = "THOÁT";
+            this.btnExit.UseVisualStyleBackColor = true;
+            this.btnExit.Click += new System.EventHandler(this.btnExit_Click);
+            // 
+            // btnAdd
+            // 
+            this.btnAdd.Font = new System.Drawing.Font("Times New Roman", 13.8F, System.Drawing.FontStyle.Italic);
+            this.btnAdd.Location = new System.Drawing.Point(350, 42);
+            this.btnAdd.Name = "btnAdd";
+            this.btnAdd.Size = new System.Drawing.Size(192, 56);
+            this.btnAdd.TabIndex = 1;
+            this.btnAdd.Text = "THÊM ĐIỂM";
+            this.btnAdd.UseVisualStyleBackColor = true;
+            // 
+            // btnSearch
+            // 
+            this.btnSearch.Font = new System.Drawing.Font("Times New Roman", 13.8F, System.Drawing.FontStyle.Italic);
+            this.btnSearch.Location = new System.Drawing.Point(62, 42);
+            this.btnSearch.Name = "btnSearch";
+            this.btnSearch.Size = new System.Drawing.Size(192, 56);
+            this.btnSearch.TabIndex = 0;
+            this.btnSearch.Text = "TÌM KIẾM";
+            this.btnSearch.UseVisualStyleBackColor = true;
+            // 
             // grbChoice
             // 
             this.grbChoice.Controls.Add(this.cbbAddition);
@@ -85,117 +140,62 @@
             this.grbChoice.TabStop = false;
             this.grbChoice.Text = "Lựa Chọn";
             // 
-            // grbButton
+            // cbbAddition
             // 
-            this.grbButton.Controls.Add(this.btnClear);
-            this.grbButton.Controls.Add(this.btnExit);
-            this.grbButton.Controls.Add(this.btnAdd);
-            this.grbButton.Controls.Add(this.btnSearch);
-            this.grbButton.Dock = System.Windows.Forms.DockStyle.Right;
-            this.grbButton.Location = new System.Drawing.Point(700, 0);
-            this.grbButton.Name = "grbButton";
-            this.grbButton.Size = new System.Drawing.Size(600, 264);
-            this.grbButton.TabIndex = 1;
-            this.grbButton.TabStop = false;
-            this.grbButton.Text = "Chức Năng";
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Times New Roman", 16.2F, System.Drawing.FontStyle.Bold);
-            this.label1.Location = new System.Drawing.Point(42, 39);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(147, 25);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "Nơi Xuất Phát";
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Font = new System.Drawing.Font("Times New Roman", 16.2F, System.Drawing.FontStyle.Bold);
-            this.label2.Location = new System.Drawing.Point(42, 121);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(106, 25);
-            this.label2.TabIndex = 1;
-            this.label2.Text = "Điểm Đến";
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Font = new System.Drawing.Font("Times New Roman", 16.2F, System.Drawing.FontStyle.Bold);
-            this.label3.Location = new System.Drawing.Point(42, 198);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(238, 25);
-            this.label3.TabIndex = 2;
-            this.label3.Text = "ĐIỀU KIỆN (NẾU CÓ)";
-            // 
-            // cbbStart
-            // 
-            this.cbbStart.Font = new System.Drawing.Font("Microsoft Sans Serif", 16.2F, System.Drawing.FontStyle.Bold);
-            this.cbbStart.FormattingEnabled = true;
-            this.cbbStart.Location = new System.Drawing.Point(356, 30);
-            this.cbbStart.Name = "cbbStart";
-            this.cbbStart.Size = new System.Drawing.Size(273, 34);
-            this.cbbStart.TabIndex = 3;
+            this.cbbAddition.Font = new System.Drawing.Font("Microsoft Sans Serif", 16.2F, System.Drawing.FontStyle.Bold);
+            this.cbbAddition.FormattingEnabled = true;
+            this.cbbAddition.Location = new System.Drawing.Point(399, 188);
+            this.cbbAddition.Name = "cbbAddition";
+            this.cbbAddition.Size = new System.Drawing.Size(273, 34);
+            this.cbbAddition.TabIndex = 5;
             // 
             // cbbEnd
             // 
             this.cbbEnd.Font = new System.Drawing.Font("Microsoft Sans Serif", 16.2F, System.Drawing.FontStyle.Bold);
             this.cbbEnd.FormattingEnabled = true;
-            this.cbbEnd.Location = new System.Drawing.Point(356, 112);
+            this.cbbEnd.Location = new System.Drawing.Point(399, 112);
             this.cbbEnd.Name = "cbbEnd";
             this.cbbEnd.Size = new System.Drawing.Size(273, 34);
             this.cbbEnd.TabIndex = 4;
             // 
-            // cbbAddition
+            // cbbStart
             // 
-            this.cbbAddition.Font = new System.Drawing.Font("Microsoft Sans Serif", 16.2F, System.Drawing.FontStyle.Bold);
-            this.cbbAddition.FormattingEnabled = true;
-            this.cbbAddition.Location = new System.Drawing.Point(356, 194);
-            this.cbbAddition.Name = "cbbAddition";
-            this.cbbAddition.Size = new System.Drawing.Size(273, 34);
-            this.cbbAddition.TabIndex = 5;
+            this.cbbStart.Font = new System.Drawing.Font("Microsoft Sans Serif", 16.2F, System.Drawing.FontStyle.Bold);
+            this.cbbStart.FormattingEnabled = true;
+            this.cbbStart.Location = new System.Drawing.Point(399, 21);
+            this.cbbStart.Name = "cbbStart";
+            this.cbbStart.Size = new System.Drawing.Size(273, 34);
+            this.cbbStart.TabIndex = 3;
             // 
-            // btnSearch
+            // label3
             // 
-            this.btnSearch.Font = new System.Drawing.Font("Times New Roman", 13.8F, System.Drawing.FontStyle.Italic);
-            this.btnSearch.Location = new System.Drawing.Point(62, 42);
-            this.btnSearch.Name = "btnSearch";
-            this.btnSearch.Size = new System.Drawing.Size(192, 56);
-            this.btnSearch.TabIndex = 0;
-            this.btnSearch.Text = "TÌM KIẾM";
-            this.btnSearch.UseVisualStyleBackColor = true;
+            this.label3.AutoSize = true;
+            this.label3.Font = new System.Drawing.Font("Times New Roman", 16.2F, System.Drawing.FontStyle.Bold);
+            this.label3.Location = new System.Drawing.Point(54, 192);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(238, 25);
+            this.label3.TabIndex = 2;
+            this.label3.Text = "ĐIỀU KIỆN (NẾU CÓ)";
             // 
-            // btnAdd
+            // label2
             // 
-            this.btnAdd.Font = new System.Drawing.Font("Times New Roman", 13.8F, System.Drawing.FontStyle.Italic);
-            this.btnAdd.Location = new System.Drawing.Point(350, 42);
-            this.btnAdd.Name = "btnAdd";
-            this.btnAdd.Size = new System.Drawing.Size(192, 56);
-            this.btnAdd.TabIndex = 1;
-            this.btnAdd.Text = "THÊM ĐIỂM";
-            this.btnAdd.UseVisualStyleBackColor = true;
+            this.label2.AutoSize = true;
+            this.label2.Font = new System.Drawing.Font("Times New Roman", 16.2F, System.Drawing.FontStyle.Bold);
+            this.label2.Location = new System.Drawing.Point(54, 116);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(106, 25);
+            this.label2.TabIndex = 1;
+            this.label2.Text = "Điểm Đến";
             // 
-            // btnExit
+            // label1
             // 
-            this.btnExit.Font = new System.Drawing.Font("Times New Roman", 13.8F, System.Drawing.FontStyle.Italic);
-            this.btnExit.Location = new System.Drawing.Point(350, 178);
-            this.btnExit.Name = "btnExit";
-            this.btnExit.Size = new System.Drawing.Size(192, 56);
-            this.btnExit.TabIndex = 2;
-            this.btnExit.Text = "THOÁT";
-            this.btnExit.UseVisualStyleBackColor = true;
-            this.btnExit.Click += new System.EventHandler(this.btnExit_Click);
-            // 
-            // btnClear
-            // 
-            this.btnClear.Font = new System.Drawing.Font("Times New Roman", 13.8F, System.Drawing.FontStyle.Italic);
-            this.btnClear.Location = new System.Drawing.Point(62, 178);
-            this.btnClear.Name = "btnClear";
-            this.btnClear.Size = new System.Drawing.Size(192, 56);
-            this.btnClear.TabIndex = 3;
-            this.btnClear.Text = "XÓA";
-            this.btnClear.UseVisualStyleBackColor = true;
+            this.label1.AutoSize = true;
+            this.label1.Font = new System.Drawing.Font("Times New Roman", 16.2F, System.Drawing.FontStyle.Bold);
+            this.label1.Location = new System.Drawing.Point(54, 30);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(147, 25);
+            this.label1.TabIndex = 0;
+            this.label1.Text = "Nơi Xuất Phát";
             // 
             // MenuFlight
             // 
@@ -211,9 +211,9 @@
             this.Text = "MenuFlight";
             this.Load += new System.EventHandler(this.MenuFlight_Load);
             this.panelFunction.ResumeLayout(false);
+            this.grbButton.ResumeLayout(false);
             this.grbChoice.ResumeLayout(false);
             this.grbChoice.PerformLayout();
-            this.grbButton.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }

@@ -37,6 +37,34 @@ namespace ChuyenBayDijkstra.Forms
         {
             InitializeComponent();
         }
+        private void LoadDataIntoComboboxes()
+        {
+            // ---- CBB START & END (KHÔNG có None) ----
+            var cityList = cities
+                .Select(c => new { c.Id, c.Name })
+                .ToList();
+
+            cbbStart.DataSource = new List<object>(cityList);
+            cbbStart.DisplayMember = "Name";
+            cbbStart.ValueMember = "Id";
+
+            cbbEnd.DataSource = new List<object>(cityList);
+            cbbEnd.DisplayMember = "Name";
+            cbbEnd.ValueMember = "Id";
+
+            // ---- CBB ADDITION (CÓ None) ----
+            var cityListWithNone = new List<object>
+            {
+            new { Id = -1, Name = "None" }
+            };
+            cityListWithNone.AddRange(cityList);
+
+            cbbAddition.DataSource = cityListWithNone;
+            cbbAddition.DisplayMember = "Name";
+            cbbAddition.ValueMember = "Id";
+        }
+
+
         private void LoadDataFromDatabase()
         {
             FlightDijkstraDataContext db = new FlightDijkstraDataContext();
@@ -127,6 +155,7 @@ namespace ChuyenBayDijkstra.Forms
         private void MenuFlight_Load(object sender, EventArgs e)
         {
             LoadDataFromDatabase();
+            LoadDataIntoComboboxes();
         }
         // ================================
         //          BUTTON EVENTS
