@@ -8,11 +8,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using ChuyenBayDijkstra.Services;
 
 namespace ChuyenBayDijkstra.Forms
 {
     public partial class MenuFlight : Form
     {
+
         #region DataStructure
         public class City
         {
@@ -32,11 +34,36 @@ namespace ChuyenBayDijkstra.Forms
 
         List<City> cities = new List<City>();
         List<Flight> flights = new List<Flight>();
+        List<List<Flight>> adjlist = new List<List<Flight>>();
+
         #endregion
+
+
+        private void BuildAdjList()
+        {
+            adjlist = new List<List<Flight>>();
+
+            if (flights.Count == 0) return;
+
+            int maxId = cities.Max(c => c.Id);
+
+            for (int i = 0; i <= maxId; i++)
+                adjlist.Add(new List<Flight>());
+
+            foreach (var f in flights)
+            {
+                if (f.SourceCityId < adjlist.Count)
+                    adjlist[f.SourceCityId].Add(f);
+            }
+        }
+
         public MenuFlight()
         {
             InitializeComponent();
+            BuildAdjList();
         }
+
+
         private void LoadDataIntoComboboxes()
         {
             // ---- CBB START & END (KHÔNG có None) ----
