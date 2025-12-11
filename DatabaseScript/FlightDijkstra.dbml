@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?><Database Name="FlightDijkstra" Class="FlightDijkstraDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
+  <Connection Mode="AppSettings" ConnectionString="Data Source=.;Initial Catalog=FlightDijkstra;Integrated Security=True;Encrypt=True;Trust Server Certificate=True" SettingsObjectName="ChuyenBayDijkstra.Properties.Settings" SettingsPropertyName="FlightDijkstraConnectionString" Provider="System.Data.SqlClient" />
+  <Table Name="dbo.City" Member="Cities">
+    <Type Name="City">
+      <Column Name="city_id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="name" Type="System.String" DbType="VarChar(100) NOT NULL" CanBeNull="false" />
+      <Column Name="country" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
+      <Column Name="airport_code" Type="System.String" DbType="Char(3)" CanBeNull="true" />
+      <Column Name="latitude" Type="System.Double" DbType="Float" CanBeNull="true" />
+      <Column Name="longitude" Type="System.Double" DbType="Float" CanBeNull="true" />
+      <Association Name="City_Flight" Member="Flights" ThisKey="city_id" OtherKey="dest_city_id" Type="Flight" />
+      <Association Name="City_Flight1" Member="Flights1" ThisKey="city_id" OtherKey="source_city_id" Type="Flight" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Flight" Member="Flights">
+    <Type Name="Flight">
+      <Column Name="flight_id" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="source_city_id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="dest_city_id" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="price" Type="System.Double" DbType="Float NOT NULL" CanBeNull="false" />
+      <Column Name="duration" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Column Name="airline" Type="System.String" DbType="VarChar(100)" CanBeNull="true" />
+      <Association Name="City_Flight" Member="City" ThisKey="dest_city_id" OtherKey="city_id" Type="City" IsForeignKey="true" />
+      <Association Name="City_Flight1" Member="City1" ThisKey="source_city_id" OtherKey="city_id" Type="City" IsForeignKey="true" />
+    </Type>
+  </Table>
+</Database>
