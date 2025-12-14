@@ -1,4 +1,5 @@
-﻿using ChuyenBayDijkstra.Services;
+﻿using ChuyenBayDijkstra.DatabaseScript;
+using ChuyenBayDijkstra.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +10,7 @@ namespace Flight_Dijkstra
     {
         private List<double> _dist;
         private List<int> _prev;
-        private Graph _graph;
+        private List<List<Flight>> _adj;
 
         public List<double> Dist
         {
@@ -21,60 +22,40 @@ namespace Flight_Dijkstra
             get => _prev;
             set => _prev = value;
         }
-        public Graph Graph
+        public List<List<Flight>> Adj
         {
-            get => _graph;
-            set => _graph = value;
+            get => _adj;
+            set => _adj = value;
         }
 
-        public Dijkstra(List<double> dist, List<int> prev, Graph graph)
+        public Dijkstra(List<double> dist, List<int> prev, List<List<Flight>> adj)
         {
             _dist = dist;
             _prev = prev;
-            _graph = graph;
+            _adj = adj;
         }
 
         public Dijkstra()
         {
             _dist = new List<double>();
             _prev = new List<int>();
-            _graph = new Graph();
+            _adj = new List<List<Flight>>();
         }
 
         // Hàm Run 
         public void Run(int startId)
         {
-            if (_graph == null) return;
+            if (_adj == null || _adj.Count == 0)
+                throw new Exception("Graph is empty");
 
-            // Lấy số lượng node thực tế
-            int n = 0;
-
-            // Adj có thể chứa null, hoặc không đúng số lượng -> lấy max index có flight
-            if (_graph.Adj != null && _graph.Adj.Count > 0)
-                n = Math.Max(n, _graph.Adj.Count);
-
-            // lấy max city_id từ flights
-            if (_graph.AllFlights != null && _graph.AllFlights.Count > 0)
-            {
-                int maxNode = _graph.AllFlights
-                    .SelectMany(f => new[] { f.source_city_id, f.dest_city_id })
-                    .Max();
-
-                n = Math.Max(n, maxNode + 1);
-            }
-
-            if (n == 0)
-                throw new Exception("Graph is empty. No cities or flights loaded.");
+            int n = _adj.Count;
 
             if (startId < 0 || startId >= n)
-                throw new ArgumentOutOfRangeException(nameof(startId), "startId is out of range.");
+                throw new ArgumentOutOfRangeException(nameof(startId));
 
-            // Init dist & prev
             _dist = Enumerable.Repeat(double.MaxValue, n).ToList();
             _prev = Enumerable.Repeat(-1, n).ToList();
             bool[] visited = new bool[n];
-
-            _dist[startId] = 0;
 
             var pq = new SortedSet<(double dist, int id)>(
                 Comparer<(double dist, int id)>.Create((a, b) =>
@@ -84,51 +65,41 @@ namespace Flight_Dijkstra
                 })
             );
 
-            double[] inSet = Enumerable.Repeat(double.MaxValue, n).ToArray();
-
+            _dist[startId] = 0;
             pq.Add((0, startId));
-            inSet[startId] = 0;
 
             while (pq.Count > 0)
             {
-                var current = pq.Min;
-                pq.Remove(current);
-                double curDist = current.dist;
-                int u = current.id;
+                var cur = pq.Min;
+                pq.Remove(cur);
 
-                if (curDist > _dist[u]) continue;
+                int u = cur.id;
                 if (visited[u]) continue;
                 visited[u] = true;
 
-                // bảo vệ out-of-range
-                if (_graph.Adj == null || u >= _graph.Adj.Count || _graph.Adj[u] == null)
-                    continue;
+                if (u >= _adj.Count || _adj[u] == null) continue;
 
-                foreach (var flight in _graph.Adj[u])
+                foreach (var f in _adj[u])
                 {
-                    if (flight == null) continue;
-
-                    int v = flight.dest_city_id;
-                    double weight = Convert.ToDouble(flight.price);
+                    int v = f.dest_city_id;
+                    double w = f.price;
 
                     if (v < 0 || v >= n) continue;
                     if (visited[v]) continue;
 
-                    double newDist = _dist[u] + weight;
+                    double nd = _dist[u] + w;
 
-                    if (newDist < _dist[v])
+                    if (nd < _dist[v])
                     {
-                        if (inSet[v] != double.MaxValue)
-                            pq.Remove((inSet[v], v));
-
-                        _dist[v] = newDist;
+                        pq.Remove((_dist[v], v)); 
+                        _dist[v] = nd;
                         _prev[v] = u;
-                        inSet[v] = newDist;
-                        pq.Add((newDist, v));
+                        pq.Add((nd, v));
                     }
                 }
             }
         }
+
 
 
         public List<int> GetShortestPath(int startId, int destId)
