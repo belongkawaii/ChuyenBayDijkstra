@@ -1,135 +1,224 @@
 ﻿using ChuyenBayDijkstra.DatabaseScript;
+using ChuyenBayDijkstra.Services;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Drawing;      
+using System.Linq;         
 using System.Windows.Forms;
-using ChuyenBayDijkstra.Services;
 
 namespace ChuyenBayDijkstra.Forms
 {
     public partial class MenuFlight : Form
     {
-
         #region DataStructure
-
-        class DijkstraResult
-        {
-            public double TotalCost { get; set; }
-            public List<int> Path { get; set; } = new List<int>();
-        }
-
         public class City
         {
-            public int Id { get; set; }
-            public string Name { get; set; }
-            public double Latitude { get; set; }
-            public double Longitude { get; set; }
+            public int Id;           // ID thành phố (từ DB)
+            public string Name;      // Tên thành phố
+            public double Latitude;  // Vĩ độ
+            public double Longitude; // Kinh độ
         }
-
         public class Flight
         {
-            public int FlightId { get; set; }
-            public int SourceCityId { get; set; }
-            public int DestCityId { get; set; }
-            public double Price { get; set; }
+            public int FlightId;      // ID chuyến bay
+            public int SourceCityId;  // Thành phố xuất phát
+            public int DestCityId;    // Thành phố đích
+            public double Price;      // Chi phí
         }
 
+        // Danh sách thành phố
         List<City> cities = new List<City>();
-        List<Flight> flights = new List<Flight>();
-        List<List<Flight>> adjlist = new List<List<Flight>>();
-        List<int> lastPath = null;   // luu path cuoi cung de ve tren panel
 
+        // Danh sách chuyến bay
+        List<Flight> flights = new List<Flight>();
+
+        // ====== MAP CITY_ID ↔ INDEX ======
+        // Dijkstra chỉ làm việc với index 0..n-1
+        Dictionary<int, int> cityIdToIndex;  // city_id → index
+        Dictionary<int, int> indexToCityId;  // index → city_id
+
+        // ====== KẾT QUẢ DIJKSTRA ======
+        // Danh sách city_id theo thứ tự đường đi ngắn nhất
+        List<int> shortestPathCityIds = new List<int>();
         #endregion
 
-
-        private void BuildAdjList()
-        {
-            adjlist = new List<List<Flight>>();
-
-            if (flights.Count == 0) return;
-
-            int maxId = cities.Max(c => c.Id);
-
-            for (int i = 0; i <= maxId; i++)
-                adjlist.Add(new List<Flight>());
-
-            foreach (var f in flights)
-            {
-                if (f.SourceCityId < adjlist.Count)
-                    adjlist[f.SourceCityId].Add(f);
-            }
-        }
-
+        // ====== CONSTRUCTOR ======
         public MenuFlight()
         {
+            // Hàm mặc định của WinForms
             InitializeComponent();
-            BuildAdjList();
         }
 
-
-        private void LoadDataIntoComboboxes()
+        // ====== SỰ KIỆN FORM LOAD ======
+        private void MenuFlight_Load(object sender, EventArgs e)
         {
-            // Load cbbStart, cbbEnd (ko co None) 
-            var cityList = cities
-                .Select(c => new { c.Id, c.Name })
-                .ToList();
+            // 1. Lấy dữ liệu từ Database
+            LoadDataFromDatabase();
 
-            cbbStart.DataSource = new List<object>(cityList);
-            cbbStart.DisplayMember = "Name";
-            cbbStart.ValueMember = "Id";
+            // 2. Map city_id sang index
+            BuildCityIndexMap();
 
-            cbbEnd.DataSource = new List<object>(cityList);
-            cbbEnd.DisplayMember = "Name";
-            cbbEnd.ValueMember = "Id";
-
-            // load cbbAddition (co None)
-            var cityListWithNone = new List<object>
-            {
-            new { Id = -1, Name = "None" }
-            };
-            cityListWithNone.AddRange(cityList);
-
-            cbbAddition.DataSource = cityListWithNone;
-            cbbAddition.DisplayMember = "Name";
-            cbbAddition.ValueMember = "Id";
+            // 3. Đổ dữ liệu vào ComboBox
+            LoadDataIntoComboboxes();
         }
 
-
+        #region Load Data
+        // ====== LOAD DATA TỪ DATABASE ======
         private void LoadDataFromDatabase()
         {
+            // DataContext (LINQ to SQL)
             FlightDijkstraDataContext db = new FlightDijkstraDataContext();
 
-            // Map DatabaseScript.City to MenuFlight.City
-            cities = db.Cities
-                .Select(c => new City
-                {
-                    Id = c.city_id,
-                    Name = c.name,
-                    Latitude = c.latitude ?? 0,
-                    Longitude = c.longitude ?? 0
-                })
-                .ToList();
+            // Map DB.City → City (domain object)
+            cities = db.Cities.Select(c => new City
+            {
+                Id = c.city_id,
+                Name = c.name,
+                Latitude = c.latitude ?? 0,   // Null-safe
+                Longitude = c.longitude ?? 0
+            }).ToList();
 
-            flights = db.Flights
-                .Select(f => new Flight
-                {
-                    FlightId = f.flight_id,
-                    SourceCityId = f.source_city_id,
-                    DestCityId = f.dest_city_id,
-                    Price = f.price
-                })
-                .ToList();
+            // Map DB.Flight → Flight (domain object)
+            flights = db.Flights.Select(f => new Flight
+            {
+                FlightId = f.flight_id,
+                SourceCityId = f.source_city_id,
+                DestCityId = f.dest_city_id,
+                Price = f.price
+            }).ToList();
+
+            // Bật DoubleBuffer để vẽ mượt
             panelHeader.EnableDoubleBuffer();
 
+            // Yêu cầu vẽ lại panel
             panelHeader.Invalidate();
         }
 
-        //CONVERT LAT & LON TO PANEL XY
+        // ====== MAP CITY_ID ↔ INDEX ======
+        private void BuildCityIndexMap()
+        {
+            cityIdToIndex = new Dictionary<int, int>();
+            indexToCityId = new Dictionary<int, int>();
+
+            // Gán index cho từng thành phố
+            for (int i = 0; i < cities.Count; i++)
+            {
+                cityIdToIndex[cities[i].Id] = i;
+                indexToCityId[i] = cities[i].Id;
+            }
+        }
+
+        // ====== LOAD COMBOBOX ======
+        private void LoadDataIntoComboboxes()
+        {
+            // Tạo danh sách hiển thị (Id + Name)
+            var list = cities.Select(c => new { c.Id, c.Name }).ToList();
+
+            // ComboBox Start
+            cbbStart.DataSource = list;
+            cbbStart.DisplayMember = "Name";
+            cbbStart.ValueMember = "Id";
+
+            // ComboBox End
+            cbbEnd.DataSource = list.ToList();
+            cbbEnd.DisplayMember = "Name";
+            cbbEnd.ValueMember = "Id";
+
+            // ComboBox Addition (có None)
+            var listAdd = new List<object>();
+            listAdd.Add(new { Id = -1, Name = "None" });
+            listAdd.AddRange(list);
+
+            cbbAddition.DataSource = listAdd;
+            cbbAddition.DisplayMember = "Name";
+            cbbAddition.ValueMember = "Id";
+        }
+        #endregion
+
+        #region Dijkstra Logic
+        // ====== BUILD GRAPH CHO DIJKSTRA ======
+        private Dijkstra BuildDijkstraGraph()
+        {
+            // Khởi tạo Dijkstra với số node = số thành phố
+            Dijkstra dj = new Dijkstra(cities.Count);
+
+            // Thêm cạnh (edge) cho mỗi chuyến bay
+            foreach (var f in flights)
+            {
+                int u = cityIdToIndex[f.SourceCityId]; // index nguồn
+                int v = cityIdToIndex[f.DestCityId];   // index đích
+                dj.AddEdge(u, v, f.Price);
+            }
+
+            return dj;
+        }
+
+        // ====== TÌM ĐƯỜNG ĐI ======
+        private List<int> FindPath(int startCityId, int endCityId)
+        {
+            var dj = BuildDijkstraGraph();
+
+            int start = cityIdToIndex[startCityId];
+            int end = cityIdToIndex[endCityId];
+
+            // Chạy Dijkstra
+            dj.Run(start);
+
+            // Lấy path dạng index
+            var pathIndex = dj.GetPath(start, end);
+
+            // Convert index → city_id
+            return pathIndex.Select(i => indexToCityId[i]).ToList();
+        }
+        #endregion
+
+        #region Hàm kết quả
+        // ====== TÍNH TỔNG CHI PHÍ ======
+        private double CalculateTotalCost(List<int> pathCityIds)
+        {
+            double sum = 0;
+
+            // Duyệt từng cặp thành phố liên tiếp
+            for (int i = 0; i < pathCityIds.Count - 1; i++)
+            {
+                int u = pathCityIds[i];
+                int v = pathCityIds[i + 1];
+
+                // Tìm flight tương ứng
+                var flight = flights.FirstOrDefault(f =>
+                    f.SourceCityId == u && f.DestCityId == v);
+
+                if (flight != null)
+                    sum += flight.Price;
+            }
+
+            return sum;
+        }
+
+        // ====== CHUỖI LỘ TRÌNH ======
+        private string BuildRouteText(List<int> pathCityIds)
+        {
+            var names = pathCityIds
+                .Select(id => cities.First(c => c.Id == id).Name)
+                .ToList();
+
+            return string.Join(" → ", names);
+        }
+
+        // ====== Lấy giá tiền chuyến bay giữa 2 thành phố ======
+        private double GetFlightPrice(int fromCityId, int toCityId)
+        {
+            var flight = flights.FirstOrDefault(f =>
+                f.SourceCityId == fromCityId &&
+                f.DestCityId == toCityId);
+
+            return flight != null ? flight.Price : 0;
+        }
+
+        #endregion
+
+        #region Drawing
+        // ====== CHUYỂN LAT/LON → TỌA ĐỘ PANEL ======
         private PointF ConvertToPanel(double lat, double lon)
         {
             float x = (float)((lon + 180) / 360f * panelHeader.Width);
@@ -137,258 +226,188 @@ namespace ChuyenBayDijkstra.Forms
             return new PointF(x, y);
         }
 
-        //ve panel
+        // ====== VẼ PANEL ======
         private void panelHeader_Paint(object sender, PaintEventArgs e)
         {
             Graphics g = e.Graphics;
             g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
 
-            // ve flight
+            // Flight thường (xanh + giá tiền xoay theo đường)
             foreach (var f in flights)
             {
-                City src = cities.FirstOrDefault(c => c.Id == f.SourceCityId);
-                City dst = cities.FirstOrDefault(c => c.Id == f.DestCityId);
+                City a = cities.First(c => c.Id == f.SourceCityId);
+                City b = cities.First(c => c.Id == f.DestCityId);
 
-                if (src == null || dst == null)
-                    continue;
+                PointF p1 = ConvertToPanel(a.Latitude, a.Longitude);
+                PointF p2 = ConvertToPanel(b.Latitude, b.Longitude);
 
-                PointF p1 = ConvertToPanel(src.Latitude, src.Longitude);
-                PointF p2 = ConvertToPanel(dst.Latitude, dst.Longitude);
+                // Vẽ đường bay
+                g.DrawLine(Pens.LightBlue, p1, p2);
 
-                // ve duong noi
-                g.DrawLine(Pens.Blue, p1, p2);
-
-                // ghi gia tien o giua
+                // ====== VẼ GIÁ TIỀN XOAY THEO ĐƯỜNG ======
                 float midX = (p1.X + p2.X) / 2;
                 float midY = (p1.Y + p2.Y) / 2;
 
-                g.DrawString(f.Price.ToString(),
-                             new Font("Arial", 10),
-                             Brushes.DarkGreen,
-                             midX, midY);
-            }
+                // Tính góc nghiêng của đoạn thẳng
+                float angle = (float)(Math.Atan2(p2.Y - p1.Y, p2.X - p1.X) * 180 / Math.PI);
 
-            // ve city
-            foreach (var city in cities)
-            {
-                PointF p = ConvertToPanel(city.Latitude, city.Longitude);
+                string text = f.Price.ToString("N0");
 
-                // Node
-                g.FillEllipse(Brushes.Red, p.X - 5, p.Y - 5, 10, 10);
-                g.DrawEllipse(Pens.Black, p.X - 5, p.Y - 5, 10, 10);
+                // Lưu trạng thái graphics
+                var state = g.Save();
 
-                // Tên thành phố
-                g.DrawString(city.Name,
-                             new Font("Arial", 9),
-                             Brushes.Black,
-                             p.X + 6, p.Y + 6);
-            }
+                // Dịch gốc tọa độ tới trung điểm
+                g.TranslateTransform(midX, midY);
 
-            // =====================
-            // VE PATH DIJKSTRA (DO)
-            // =====================
-            if (lastPath != null && lastPath.Count > 1)
-            {
-                using (Pen redPen = new Pen(Color.Red, 4))
-                {
-                    for (int i = 0; i < lastPath.Count - 1; i++)
+                // Xoay theo góc đoạn thẳng
+                g.RotateTransform(angle);
+
+                // Vẽ chữ (không nền)
+                g.DrawString(
+                    text,
+                    Font,
+                    Brushes.DarkGreen,
+                    0, 0,
+                    new StringFormat
                     {
-                        City a = cities.FirstOrDefault(c => c.Id == lastPath[i]);
-                        City b = cities.FirstOrDefault(c => c.Id == lastPath[i + 1]);
+                        Alignment = StringAlignment.Center,
+                        LineAlignment = StringAlignment.Center
+                    });
 
-                        if (a == null || b == null) continue;
+                // Phục hồi graphics
+                g.Restore(state);
+            }
 
-                        PointF p1 = ConvertToPanel(a.Latitude, a.Longitude);
-                        PointF p2 = ConvertToPanel(b.Latitude, b.Longitude);
 
-                        g.DrawLine(redPen, p1, p2);
-                    }
-                }
+
+            // Vẽ đường đi ngắn nhất (màu đỏ + giá tiền)
+            for (int i = 0; i < shortestPathCityIds.Count - 1; i++)
+            {
+                int fromId = shortestPathCityIds[i];
+                int toId = shortestPathCityIds[i + 1];
+
+                City a = cities.First(c => c.Id == fromId);
+                City b = cities.First(c => c.Id == toId);
+
+                PointF p1 = ConvertToPanel(a.Latitude, a.Longitude);
+                PointF p2 = ConvertToPanel(b.Latitude, b.Longitude);
+
+                // Vẽ đường đỏ
+                g.DrawLine(new Pen(Color.Red, 3), p1, p2);
+
+                // Lấy giá tiền
+                double price = GetFlightPrice(fromId, toId);
+
+                // Tính trung điểm
+                float midX = (p1.X + p2.X) / 2;
+                float midY = (p1.Y + p2.Y) / 2;
+
+                // Nền trắng để chữ dễ nhìn
+                string text = price.ToString("N0");
+                SizeF size = g.MeasureString(text, Font);
+
+                g.FillRectangle(
+                    Brushes.White,
+                    midX - size.Width / 2,
+                    midY - size.Height / 2,
+                    size.Width,
+                    size.Height);
+
+                // Vẽ giá tiền
+                g.DrawString(
+                    text,
+                    Font,
+                    Brushes.DarkRed,
+                    midX - size.Width / 2,
+                    midY - size.Height / 2);
+            }
+
+            // Vẽ thành phố
+            foreach (var c in cities)
+            {
+                PointF p = ConvertToPanel(c.Latitude, c.Longitude);
+                g.FillEllipse(Brushes.Red, p.X - 4, p.Y - 4, 8, 8);
+                g.DrawString(c.Name, Font, Brushes.Black, p.X + 5, p.Y + 5);
             }
         }
+        #endregion
 
-        private DijkstraResult DijkstraWithAddition(int startId, int addId, int endId)
+        #region Events Click
+
+        private void btnAdd_Click(object sender, EventArgs e)
         {
-            var part1 = Dijkstra(startId, addId);
-            var part2 = Dijkstra(addId, endId);
-
-            if (part1 == null || part2 == null)
-                return null;
-
-            // ghep 2 path (bo di node addId o giua)
-            part1.Path.RemoveAt(part1.Path.Count - 1);
-            part1.Path.AddRange(part2.Path);
-
-            return new DijkstraResult
-            {
-                TotalCost = part1.TotalCost + part2.TotalCost,
-                Path = part1.Path
-            };
-        }
-
-        private void ShowResult(DijkstraResult result)
-        {
-            if (result == null)
-            {
-                MessageBox.Show("Không tìm được đường đi!", "Dijkstra",
-                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            
+                MessageBox.Show(" Cai Nay Ban Dong Quoc Thai lam nha ");
                 return;
-            }
-
-            StringBuilder sb = new StringBuilder();
-            sb.AppendLine("PATH:");
-
-            foreach (int id in result.Path)
-            {
-                var city = cities.FirstOrDefault(c => c.Id == id);
-                sb.Append(city != null ? city.Name : id.ToString());
-                sb.Append(" -> ");
-            }
-
-            sb.Length -= 4; //xoa " -> "
-            sb.AppendLine();
-            sb.AppendLine($"TOTAL PRICE: {result.TotalCost}");
-
-            MessageBox.Show(sb.ToString(), "DIJKSTRA RESULT",
-                MessageBoxButtons.OK, MessageBoxIcon.Information);
+           
         }
-
-
-        private void MenuFlight_Load(object sender, EventArgs e)
-        {
-            LoadDataFromDatabase();
-            BuildAdjList();
-            LoadDataIntoComboboxes();
-
-        }
-        private DijkstraResult Dijkstra(int startId, int endId)
-        {
-            int maxId = cities.Max(c => c.Id);
-
-            double[] dist = new double[maxId + 1];
-            int[] prev = new int[maxId + 1];
-            bool[] visited = new bool[maxId + 1];
-
-            for (int i = 0; i <= maxId; i++)
-            {
-                dist[i] = double.MaxValue;
-                prev[i] = -1;
-            }
-
-            dist[startId] = 0;
-
-            for (int i = 0; i <= maxId; i++)
-            {
-                // chon node u chua tham va co dist nho nhat
-                double minDist = double.MaxValue;
-                int u = -1;
-
-                for (int j = 0; j <= maxId; j++)
-                {
-                    if (!visited[j] && dist[j] < minDist)
-                    {
-                        minDist = dist[j];
-                        u = j;
-                    }
-                }
-
-                if (u == -1) break;
-                if (u == endId) break;
-
-                visited[u] = true;
-
-                // cach cap nhat dist cho cac dinh ke v
-                foreach (var f in adjlist[u])
-                {
-                    int v = f.DestCityId;
-                    double cost = f.Price;
-
-                    if (dist[u] + cost < dist[v])
-                    {
-                        dist[v] = dist[u] + cost;
-                        prev[v] = u;
-                    }
-                }
-            }
-
-            // dung path
-            List<int> path = new List<int>();
-            int cur = endId;
-
-            if (prev[cur] == -1 && cur != startId)
-                return null; // ko tim duoc duong di
-
-            while (cur != -1)
-            {
-                path.Add(cur);
-                cur = prev[cur];
-            }
-
-            path.Reverse();
-
-            return new DijkstraResult
-            {
-                TotalCost = dist[endId],
-                Path = path
-            };
-        }
-
-
-
-        #region Click Events
         private void btnSearch_Click(object sender, EventArgs e)
         {
             if (cbbStart.SelectedValue == null || cbbEnd.SelectedValue == null)
-            {
-                MessageBox.Show("Vui lòng chọn Start và End");
                 return;
-            }
 
             int startId = (int)cbbStart.SelectedValue;
             int endId = (int)cbbEnd.SelectedValue;
             int addId = (int)cbbAddition.SelectedValue;
 
-            DijkstraResult result;
+            shortestPathCityIds.Clear();
+
+            List<int> path;
 
             if (addId == -1)
-                result = Dijkstra(startId, endId);
-            else
-                result = DijkstraWithAddition(startId, addId, endId);
-
-            if (result == null)
             {
-                MessageBox.Show("Không tìm được đường đi!");
-                lastPath = null;
-                panelHeader.Invalidate();
+                path = FindPath(startId, endId);
+            }
+            else
+            {
+                var p1 = FindPath(startId, addId);
+                var p2 = FindPath(addId, endId);
+
+                if (p1.Count == 0 || p2.Count == 0)
+                {
+                    MessageBox.Show("Không tìm thấy đường đi phù hợp!",
+                                    "Thông báo",
+                                    MessageBoxButtons.OK,
+                                    MessageBoxIcon.Warning);
+                    return;
+                }
+
+                p1.RemoveAt(p1.Count - 1);
+                p1.AddRange(p2);
+                path = p1;
+            }
+
+            if (path.Count == 0)
+            {
+                MessageBox.Show("Không tìm thấy đường đi phù hợp!",
+                                "Thông báo",
+                                MessageBoxButtons.OK,
+                                MessageBoxIcon.Warning);
                 return;
             }
 
-            // 🔴 LUU PATH DE VE
-            lastPath = result.Path;
+            shortestPathCityIds = path;
 
-            panelHeader.Invalidate();   // repaint để vẽ đường đỏ
+            double totalCost = CalculateTotalCost(path);
+            string routeText = BuildRouteText(path);
 
-            ShowResult(result);
-        }
-
-
-        private void btnClean_Click(object sender, EventArgs e)
-        {
-            cbbStart.SelectedIndex = -1;
-            cbbEnd.SelectedIndex = -1;
-            cbbAddition.SelectedValue = -1;
-
-            // 🔴 XOA PATH
-            lastPath = null;
+            MessageBox.Show(
+                $"Lộ trình:\n{routeText}\n\nTổng chi phí: {totalCost:N0}",
+                "Kết quả tìm đường",
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Information);
 
             panelHeader.Invalidate();
         }
 
 
-        private void btnAdd_Click(object sender, EventArgs e)
+        private void btnClean_Click(object sender, EventArgs e)
         {
-
+            shortestPathCityIds.Clear();
+            panelHeader.Invalidate();
         }
+
+
         private void btnExit_Click(object sender, EventArgs e)
         {
             Close();

@@ -1,144 +1,101 @@
-﻿using ChuyenBayDijkstra.DatabaseScript;
-using ChuyenBayDijkstra.Services;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Flight_Dijkstra
+namespace ChuyenBayDijkstra.Services
 {
+    public class Edge
+    {
+        public int To;
+        public double Weight;
+
+        public Edge(int to, double weight)
+        {
+            To = to;
+            Weight = weight;
+        }
+    }
+
     public class Dijkstra
     {
-        private List<double> _dist;
-        private List<int> _prev;
-        private List<List<Flight>> _adj;
+        private List<List<Edge>> adj;
+        private double[] dist;
+        private int[] prev;
 
-        public List<double> Dist
+        public Dijkstra(int n)
         {
-            get => _dist;
-            set => _dist = value;
-        }
-        public List<int> Prev
-        {
-            get => _prev;
-            set => _prev = value;
-        }
-        public List<List<Flight>> Adj
-        {
-            get => _adj;
-            set => _adj = value;
+            adj = new List<List<Edge>>();
+            for (int i = 0; i < n; i++)
+                adj.Add(new List<Edge>());
         }
 
-        public Dijkstra(List<double> dist, List<int> prev, List<List<Flight>> adj)
+        public void AddEdge(int from, int to, double weight)
         {
-            _dist = dist;
-            _prev = prev;
-            _adj = adj;
+            adj[from].Add(new Edge(to, weight));
         }
 
-        public Dijkstra()
+        public void Run(int start)
         {
-            _dist = new List<double>();
-            _prev = new List<int>();
-            _adj = new List<List<Flight>>();
-        }
-
-        // Hàm Run 
-        public void Run(int startId)
-        {
-            if (_adj == null || _adj.Count == 0)
-                throw new Exception("Graph is empty");
-
-            int n = _adj.Count;
-
-            if (startId < 0 || startId >= n)
-                throw new ArgumentOutOfRangeException(nameof(startId));
-
-            _dist = Enumerable.Repeat(double.MaxValue, n).ToList();
-            _prev = Enumerable.Repeat(-1, n).ToList();
+            int n = adj.Count;
+            dist = new double[n];
+            prev = new int[n];
             bool[] visited = new bool[n];
 
-            var pq = new SortedSet<(double dist, int id)>(
-                Comparer<(double dist, int id)>.Create((a, b) =>
-                {
-                    int cmp = a.dist.CompareTo(b.dist);
-                    return cmp != 0 ? cmp : a.id.CompareTo(b.id);
-                })
-            );
-
-            _dist[startId] = 0;
-            pq.Add((0, startId));
-
-            while (pq.Count > 0)
+            for (int i = 0; i < n; i++)
             {
-                var cur = pq.Min;
-                pq.Remove(cur);
+                dist[i] = double.MaxValue;
+                prev[i] = -1;
+            }
 
-                int u = cur.id;
-                if (visited[u]) continue;
+            dist[start] = 0;
+
+            for (int i = 0; i < n; i++)
+            {
+                int u = -1;
+                double best = double.MaxValue;
+
+                for (int j = 0; j < n; j++)
+                {
+                    if (!visited[j] && dist[j] < best)
+                    {
+                        best = dist[j];
+                        u = j;
+                    }
+                }
+
+                if (u == -1) break;
+
                 visited[u] = true;
 
-                if (u >= _adj.Count || _adj[u] == null) continue;
-
-                foreach (var f in _adj[u])
+                foreach (var e in adj[u])
                 {
-                    int v = f.dest_city_id;
-                    double w = f.price;
+                    if (visited[e.To]) continue;
 
-                    if (v < 0 || v >= n) continue;
-                    if (visited[v]) continue;
-
-                    double nd = _dist[u] + w;
-
-                    if (nd < _dist[v])
+                    double nd = dist[u] + e.Weight;
+                    if (nd < dist[e.To])
                     {
-                        pq.Remove((_dist[v], v)); 
-                        _dist[v] = nd;
-                        _prev[v] = u;
-                        pq.Add((nd, v));
+                        dist[e.To] = nd;
+                        prev[e.To] = u;
                     }
                 }
             }
         }
 
-
-
-        public List<int> GetShortestPath(int startId, int destId)
+        public List<int> GetPath(int start, int end)
         {
-            // Kiểm tra đã chạy thuật toán chưa
-            if (_dist == null || _dist.Count == 0)
-            {
-                throw new InvalidOperationException("Chưa chạy thuật toán Dijkstra. Hãy gọi Run() trước.");
-            }
+            var path = new List<int>();
+            if (dist[end] == double.MaxValue) return path;
 
-            if (Math.Abs(_dist[destId] - Double.MaxValue) < 10e-9)
-            {
-                return new List<int>();
-            }
+            for (int v = end; v != -1; v = prev[v])
+                path.Add(v);
 
-            var st = new Stack<int>();
-            st.Push(destId);
-
-            while (st.Peek() != startId)
-            {
-                st.Push(_prev[st.Peek()]);
-            }
-
-            var res = new List<int>();
-            while (st.Count != 0)
-            {
-                res.Add(st.Pop());
-            }
-
-            return res;
+            path.Reverse();
+            return path;
         }
 
-        public double GetDistance(int destId)
+        public double GetDistance(int end)
         {
-            if (_dist == null || destId >= _dist.Count)
-            {
-                throw new ArgumentException("Không tìm thấy thành phố với ID này.");
-            }
-            return _dist[destId];
+            return dist[end];
         }
     }
 }
