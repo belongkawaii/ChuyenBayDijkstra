@@ -103,6 +103,8 @@
   <ItemGroup>
     <None Include="Resources\windows-wallpaper-27.jpg" />
     <Content Include="DatabaseScript\init.sql" />
+    <None Include="Resource\BanDoTheGioi.jpg" />
+    <None Include="Resource\Background.jpg" />
     <Content Include="Resource\Flight.png" />
     <Content Include="Resource\Icon.ico" />
     <Content Include="Resource\windows-wallpaper-27.jpg" />

@@ -60,6 +60,9 @@ namespace ChuyenBayDijkstra.Forms
 
             // 3. Đổ dữ liệu vào ComboBox
             LoadDataIntoComboboxes();
+
+            cbbStart.SelectedIndex = -1;
+            cbbEnd.SelectedIndex = -1;
         }
 
         #region Load Data
@@ -263,16 +266,20 @@ namespace ChuyenBayDijkstra.Forms
                 g.RotateTransform(angle);
 
                 // Vẽ chữ (không nền)
-                g.DrawString(
-                    text,
-                    Font,
-                    Brushes.DarkGreen,
-                    0, 0,
-                    new StringFormat
-                    {
-                        Alignment = StringAlignment.Center,
-                        LineAlignment = StringAlignment.Center
-                    });
+                using (Font boldFont = new Font(Font, FontStyle.Bold))
+                {
+                    g.DrawString(
+                        text,
+                        boldFont,
+                        Brushes.DarkGreen,
+                        0, 0,
+                        new StringFormat
+                        {
+                            Alignment = StringAlignment.Center,
+                            LineAlignment = StringAlignment.Center
+                        });
+                }
+
 
                 // Phục hồi graphics
                 g.Restore(state);
@@ -326,7 +333,7 @@ namespace ChuyenBayDijkstra.Forms
             foreach (var c in cities)
             {
                 PointF p = ConvertToPanel(c.Latitude, c.Longitude);
-                g.FillEllipse(Brushes.Red, p.X - 4, p.Y - 4, 8, 8);
+                g.FillEllipse(Brushes.Red, p.X - 4, p.Y - 4, 18, 18);
                 g.DrawString(c.Name, Font, Brushes.Black, p.X + 5, p.Y + 5);
             }
         }
@@ -343,8 +350,25 @@ namespace ChuyenBayDijkstra.Forms
         }
         private void btnSearch_Click(object sender, EventArgs e)
         {
-            if (cbbStart.SelectedValue == null || cbbEnd.SelectedValue == null)
+            if (cbbStart.SelectedIndex == -1 || cbbEnd.SelectedIndex == -1)
+            {
+                MessageBox.Show("Vui lòng chọn thành phố xuất phát và đích!",
+                                "Thông báo",
+                                MessageBoxButtons.OK,
+                                MessageBoxIcon.Warning);
                 return;
+            }
+                
+
+            if (cbbStart.SelectedIndex == cbbEnd.SelectedIndex)
+            {
+                MessageBox.Show("Thành phố xuất phát và đích không được trùng nhau!",
+                                "Thông báo",
+                                MessageBoxButtons.OK,
+                                MessageBoxIcon.Warning);
+                return;
+            }
+                
 
             int startId = (int)cbbStart.SelectedValue;
             int endId = (int)cbbEnd.SelectedValue;
@@ -391,6 +415,9 @@ namespace ChuyenBayDijkstra.Forms
             double totalCost = CalculateTotalCost(path);
             string routeText = BuildRouteText(path);
 
+            lblTotalPrice.Text = "$" + totalCost.ToString("N0");
+            lblLoTrinh.Text = routeText;
+
             MessageBox.Show(
                 $"Lộ trình:\n{routeText}\n\nTổng chi phí: {totalCost:N0}",
                 "Kết quả tìm đường",
@@ -403,6 +430,10 @@ namespace ChuyenBayDijkstra.Forms
 
         private void btnClean_Click(object sender, EventArgs e)
         {
+            cbbStart.SelectedIndex = -1;
+            cbbEnd.SelectedIndex = -1;
+            cbbAddition.SelectedValue = -1;
+            lblTotalPrice.Text = "$0";
             shortestPathCityIds.Clear();
             panelHeader.Invalidate();
         }
