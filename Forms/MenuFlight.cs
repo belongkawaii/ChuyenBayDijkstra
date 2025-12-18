@@ -343,11 +343,27 @@ namespace ChuyenBayDijkstra.Forms
 
         private void btnAdd_Click(object sender, EventArgs e)
         {
-            
-                MessageBox.Show(" Cai Nay Ban Dong Quoc Thai lam nha ");
-                return;
-           
+            frmListCities frm = new frmListCities();
+            frm.FormClosing += Frm_FormClosing;
+            frm.Show();
+            this.Hide();
+
         }
+
+        private void Frm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            this.Show();
+            // 1. Lấy dữ liệu từ Database
+            LoadDataFromDatabase();
+
+            // 2. Map city_id sang index
+            BuildCityIndexMap();
+
+            // 3. Đổ dữ liệu vào ComboBox
+            LoadDataIntoComboboxes();
+
+        }
+
         private void btnSearch_Click(object sender, EventArgs e)
         {
             if (cbbStart.SelectedIndex == -1 || cbbEnd.SelectedIndex == -1)
@@ -419,7 +435,7 @@ namespace ChuyenBayDijkstra.Forms
             lblLoTrinh.Text = routeText;
 
             MessageBox.Show(
-                $"Lộ trình:\n{routeText}\n\nTổng chi phí: {totalCost:N0}",
+                $"Lộ trình:\n{routeText}\n\nTổng chi phí: ${totalCost:N0}",
                 "Kết quả tìm đường",
                 MessageBoxButtons.OK,
                 MessageBoxIcon.Information);
@@ -438,11 +454,20 @@ namespace ChuyenBayDijkstra.Forms
             panelHeader.Invalidate();
         }
 
+        private void btnAddFlight_Click(object sender, EventArgs e)
+        {
+            frmListFlights frm = new frmListFlights();
+            frm.FormClosing += Frm_FormClosing;
+            frm.Show();
+            this.Hide();
+        }
 
         private void btnExit_Click(object sender, EventArgs e)
         {
             Close();
         }
         #endregion
+
+        
     }
 }

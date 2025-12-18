@@ -52,6 +52,18 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>FlightDijkstra.dbml</DependentUpon>
     </Compile>
+    <Compile Include="Forms\frmListCities.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frmListCities.Designer.cs">
+      <DependentUpon>frmListCities.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\frmListFlights.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frmListFlights.Designer.cs">
+      <DependentUpon>frmListFlights.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\MenuFlight.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -63,6 +75,12 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\Dijkstra.cs" />
     <Compile Include="Services\Graph.cs" />
+    <EmbeddedResource Include="Forms\frmListCities.resx">
+      <DependentUpon>frmListCities.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frmListFlights.resx">
+      <DependentUpon>frmListFlights.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\MenuFlight.resx">
       <DependentUpon>MenuFlight.cs</DependentUpon>
     </EmbeddedResource>

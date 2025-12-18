@@ -43,9 +43,10 @@
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.panelHeader = new System.Windows.Forms.Panel();
+            this.lblLoTrinh = new System.Windows.Forms.Label();
             this.lblTotalPrice = new System.Windows.Forms.Label();
             this.lbltext = new System.Windows.Forms.Label();
-            this.lblLoTrinh = new System.Windows.Forms.Label();
+            this.btnAddFlight = new System.Windows.Forms.Button();
             this.panelFunction.SuspendLayout();
             this.grbButton.SuspendLayout();
             this.grbChoice.SuspendLayout();
@@ -65,6 +66,7 @@
             // 
             // grbButton
             // 
+            this.grbButton.Controls.Add(this.btnAddFlight);
             this.grbButton.Controls.Add(this.btnClear);
             this.grbButton.Controls.Add(this.btnExit);
             this.grbButton.Controls.Add(this.btnAdd);
@@ -81,8 +83,9 @@
             // 
             // btnClear
             // 
+            this.btnClear.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnClear.Font = new System.Drawing.Font("Times New Roman", 13.8F, System.Drawing.FontStyle.Italic);
-            this.btnClear.Location = new System.Drawing.Point(61, 161);
+            this.btnClear.Location = new System.Drawing.Point(61, 116);
             this.btnClear.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnClear.Name = "btnClear";
             this.btnClear.Size = new System.Drawing.Size(192, 57);
@@ -93,8 +96,9 @@
             // 
             // btnExit
             // 
+            this.btnExit.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnExit.Font = new System.Drawing.Font("Times New Roman", 13.8F, System.Drawing.FontStyle.Italic);
-            this.btnExit.Location = new System.Drawing.Point(349, 161);
+            this.btnExit.Location = new System.Drawing.Point(203, 185);
             this.btnExit.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnExit.Name = "btnExit";
             this.btnExit.Size = new System.Drawing.Size(192, 57);
@@ -105,18 +109,20 @@
             // 
             // btnAdd
             // 
-            this.btnAdd.Font = new System.Drawing.Font("Times New Roman", 13.8F, System.Drawing.FontStyle.Italic);
+            this.btnAdd.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnAdd.Font = new System.Drawing.Font("Times New Roman", 12F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnAdd.Location = new System.Drawing.Point(349, 42);
             this.btnAdd.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnAdd.Name = "btnAdd";
             this.btnAdd.Size = new System.Drawing.Size(192, 57);
             this.btnAdd.TabIndex = 1;
-            this.btnAdd.Text = "THÊM ĐIỂM";
+            this.btnAdd.Text = "THÊM THÀNH PHỐ";
             this.btnAdd.UseVisualStyleBackColor = true;
             this.btnAdd.Click += new System.EventHandler(this.btnAdd_Click);
             // 
             // btnSearch
             // 
+            this.btnSearch.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnSearch.Font = new System.Drawing.Font("Times New Roman", 13.8F, System.Drawing.FontStyle.Italic);
             this.btnSearch.Location = new System.Drawing.Point(61, 42);
             this.btnSearch.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
@@ -220,6 +226,16 @@
             this.panelHeader.TabIndex = 0;
             this.panelHeader.Paint += new System.Windows.Forms.PaintEventHandler(this.panelHeader_Paint);
             // 
+            // lblLoTrinh
+            // 
+            this.lblLoTrinh.AutoSize = true;
+            this.lblLoTrinh.BackColor = System.Drawing.Color.Transparent;
+            this.lblLoTrinh.Font = new System.Drawing.Font("Microsoft Sans Serif", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblLoTrinh.Location = new System.Drawing.Point(25, 586);
+            this.lblLoTrinh.Name = "lblLoTrinh";
+            this.lblLoTrinh.Size = new System.Drawing.Size(0, 32);
+            this.lblLoTrinh.TabIndex = 3;
+            // 
             // lblTotalPrice
             // 
             this.lblTotalPrice.AutoSize = true;
@@ -242,15 +258,18 @@
             this.lbltext.TabIndex = 1;
             this.lbltext.Text = "TỔNG CHI PHÍ:";
             // 
-            // lblLoTrinh
+            // btnAddFlight
             // 
-            this.lblLoTrinh.AutoSize = true;
-            this.lblLoTrinh.BackColor = System.Drawing.Color.Transparent;
-            this.lblLoTrinh.Font = new System.Drawing.Font("Microsoft Sans Serif", 16.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblLoTrinh.Location = new System.Drawing.Point(25, 586);
-            this.lblLoTrinh.Name = "lblLoTrinh";
-            this.lblLoTrinh.Size = new System.Drawing.Size(0, 32);
-            this.lblLoTrinh.TabIndex = 3;
+            this.btnAddFlight.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnAddFlight.Font = new System.Drawing.Font("Times New Roman", 12F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnAddFlight.Location = new System.Drawing.Point(349, 116);
+            this.btnAddFlight.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.btnAddFlight.Name = "btnAddFlight";
+            this.btnAddFlight.Size = new System.Drawing.Size(192, 57);
+            this.btnAddFlight.TabIndex = 4;
+            this.btnAddFlight.Text = "THÊM CHUYẾN BAY";
+            this.btnAddFlight.UseVisualStyleBackColor = true;
+            this.btnAddFlight.Click += new System.EventHandler(this.btnAddFlight_Click);
             // 
             // MenuFlight
             // 
@@ -295,5 +314,6 @@
         private System.Windows.Forms.Label lbltext;
         private System.Windows.Forms.Label lblTotalPrice;
         private System.Windows.Forms.Label lblLoTrinh;
+        private System.Windows.Forms.Button btnAddFlight;
     }
 }
