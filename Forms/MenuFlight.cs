@@ -452,6 +452,7 @@ namespace ChuyenBayDijkstra.Forms
             lblTotalPrice.Text = "$0";
             shortestPathCityIds.Clear();
             panelHeader.Invalidate();
+            lblLoTrinh.Text = "";
         }
 
         private void btnAddFlight_Click(object sender, EventArgs e)
