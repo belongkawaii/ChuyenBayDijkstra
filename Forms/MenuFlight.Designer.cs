@@ -31,9 +31,10 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MenuFlight));
             this.panelFunction = new System.Windows.Forms.Panel();
             this.grbButton = new System.Windows.Forms.GroupBox();
+            this.btnAddFlight = new System.Windows.Forms.Button();
             this.btnClear = new System.Windows.Forms.Button();
             this.btnExit = new System.Windows.Forms.Button();
-            this.btnAdd = new System.Windows.Forms.Button();
+            this.btnAddCity = new System.Windows.Forms.Button();
             this.btnSearch = new System.Windows.Forms.Button();
             this.grbChoice = new System.Windows.Forms.GroupBox();
             this.cbbAddition = new System.Windows.Forms.ComboBox();
@@ -46,7 +47,6 @@
             this.lblLoTrinh = new System.Windows.Forms.Label();
             this.lblTotalPrice = new System.Windows.Forms.Label();
             this.lbltext = new System.Windows.Forms.Label();
-            this.btnAddFlight = new System.Windows.Forms.Button();
             this.panelFunction.SuspendLayout();
             this.grbButton.SuspendLayout();
             this.grbChoice.SuspendLayout();
@@ -69,7 +69,7 @@
             this.grbButton.Controls.Add(this.btnAddFlight);
             this.grbButton.Controls.Add(this.btnClear);
             this.grbButton.Controls.Add(this.btnExit);
-            this.grbButton.Controls.Add(this.btnAdd);
+            this.grbButton.Controls.Add(this.btnAddCity);
             this.grbButton.Controls.Add(this.btnSearch);
             this.grbButton.Dock = System.Windows.Forms.DockStyle.Right;
             this.grbButton.Location = new System.Drawing.Point(700, 0);
@@ -80,6 +80,19 @@
             this.grbButton.TabIndex = 1;
             this.grbButton.TabStop = false;
             this.grbButton.Text = "Chức Năng";
+            // 
+            // btnAddFlight
+            // 
+            this.btnAddFlight.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnAddFlight.Font = new System.Drawing.Font("Times New Roman", 12F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnAddFlight.Location = new System.Drawing.Point(349, 116);
+            this.btnAddFlight.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.btnAddFlight.Name = "btnAddFlight";
+            this.btnAddFlight.Size = new System.Drawing.Size(192, 57);
+            this.btnAddFlight.TabIndex = 4;
+            this.btnAddFlight.Text = "THÊM CHUYẾN BAY";
+            this.btnAddFlight.UseVisualStyleBackColor = true;
+            this.btnAddFlight.Click += new System.EventHandler(this.btnAddFlight_Click);
             // 
             // btnClear
             // 
@@ -107,18 +120,18 @@
             this.btnExit.UseVisualStyleBackColor = true;
             this.btnExit.Click += new System.EventHandler(this.btnExit_Click);
             // 
-            // btnAdd
+            // btnAddCity
             // 
-            this.btnAdd.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnAdd.Font = new System.Drawing.Font("Times New Roman", 12F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnAdd.Location = new System.Drawing.Point(349, 42);
-            this.btnAdd.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.btnAdd.Name = "btnAdd";
-            this.btnAdd.Size = new System.Drawing.Size(192, 57);
-            this.btnAdd.TabIndex = 1;
-            this.btnAdd.Text = "THÊM THÀNH PHỐ";
-            this.btnAdd.UseVisualStyleBackColor = true;
-            this.btnAdd.Click += new System.EventHandler(this.btnAdd_Click);
+            this.btnAddCity.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnAddCity.Font = new System.Drawing.Font("Times New Roman", 12F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnAddCity.Location = new System.Drawing.Point(349, 42);
+            this.btnAddCity.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.btnAddCity.Name = "btnAddCity";
+            this.btnAddCity.Size = new System.Drawing.Size(192, 57);
+            this.btnAddCity.TabIndex = 1;
+            this.btnAddCity.Text = "THÊM THÀNH PHỐ";
+            this.btnAddCity.UseVisualStyleBackColor = true;
+            this.btnAddCity.Click += new System.EventHandler(this.btnAddCity_Click);
             // 
             // btnSearch
             // 
@@ -258,19 +271,6 @@
             this.lbltext.TabIndex = 1;
             this.lbltext.Text = "TỔNG CHI PHÍ:";
             // 
-            // btnAddFlight
-            // 
-            this.btnAddFlight.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnAddFlight.Font = new System.Drawing.Font("Times New Roman", 12F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnAddFlight.Location = new System.Drawing.Point(349, 116);
-            this.btnAddFlight.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.btnAddFlight.Name = "btnAddFlight";
-            this.btnAddFlight.Size = new System.Drawing.Size(192, 57);
-            this.btnAddFlight.TabIndex = 4;
-            this.btnAddFlight.Text = "THÊM CHUYẾN BAY";
-            this.btnAddFlight.UseVisualStyleBackColor = true;
-            this.btnAddFlight.Click += new System.EventHandler(this.btnAddFlight_Click);
-            // 
             // MenuFlight
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -302,7 +302,7 @@
         private System.Windows.Forms.GroupBox grbButton;
         private System.Windows.Forms.Button btnClear;
         private System.Windows.Forms.Button btnExit;
-        private System.Windows.Forms.Button btnAdd;
+        private System.Windows.Forms.Button btnAddCity;
         private System.Windows.Forms.Button btnSearch;
         private System.Windows.Forms.GroupBox grbChoice;
         private System.Windows.Forms.ComboBox cbbAddition;

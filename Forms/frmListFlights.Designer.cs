@@ -386,8 +386,10 @@
             this.ClientSize = new System.Drawing.Size(1282, 853);
             this.Controls.Add(this.pnlMain);
             this.Controls.Add(this.pnlFooter);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "frmListFlights";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "DANH SÁCH CHUYẾN BAY";
             this.Load += new System.EventHandler(this.frmListFlights_Load);
             this.pnlFooter.ResumeLayout(false);

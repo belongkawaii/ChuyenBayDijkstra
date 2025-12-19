@@ -97,6 +97,20 @@ namespace ChuyenBayDijkstra.Forms
             panelHeader.Invalidate();
         }
 
+        private void Frm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            this.Show();
+            // 1. Lấy dữ liệu từ Database
+            LoadDataFromDatabase();
+
+            // 2. Map city_id sang index
+            BuildCityIndexMap();
+
+            // 3. Đổ dữ liệu vào ComboBox
+            LoadDataIntoComboboxes();
+
+        }
+
         // ====== MAP CITY_ID ↔ INDEX ======
         private void BuildCityIndexMap()
         {
@@ -341,8 +355,9 @@ namespace ChuyenBayDijkstra.Forms
 
         #region Events Click
 
-        private void btnAdd_Click(object sender, EventArgs e)
+        private void btnAddCity_Click(object sender, EventArgs e)
         {
+            btnClean_Click(sender, e);
             frmListCities frm = new frmListCities();
             frm.FormClosing += Frm_FormClosing;
             frm.Show();
@@ -350,19 +365,7 @@ namespace ChuyenBayDijkstra.Forms
 
         }
 
-        private void Frm_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            this.Show();
-            // 1. Lấy dữ liệu từ Database
-            LoadDataFromDatabase();
-
-            // 2. Map city_id sang index
-            BuildCityIndexMap();
-
-            // 3. Đổ dữ liệu vào ComboBox
-            LoadDataIntoComboboxes();
-
-        }
+        
 
         private void btnSearch_Click(object sender, EventArgs e)
         {
@@ -457,6 +460,7 @@ namespace ChuyenBayDijkstra.Forms
 
         private void btnAddFlight_Click(object sender, EventArgs e)
         {
+            btnClean_Click(sender, e);
             frmListFlights frm = new frmListFlights();
             frm.FormClosing += Frm_FormClosing;
             frm.Show();

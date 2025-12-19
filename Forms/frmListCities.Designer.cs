@@ -386,6 +386,7 @@
             this.ClientSize = new System.Drawing.Size(1282, 853);
             this.Controls.Add(this.pnlHeader);
             this.Controls.Add(this.pnlFooter);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "frmListCities";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
