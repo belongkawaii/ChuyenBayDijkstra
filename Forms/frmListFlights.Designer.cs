@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmListFlights));
             this.pnlFooter = new System.Windows.Forms.Panel();
             this.grbChucNang = new System.Windows.Forms.GroupBox();
             this.btnThoat = new System.Windows.Forms.Button();
@@ -35,6 +36,8 @@
             this.btnSua = new System.Windows.Forms.Button();
             this.btnThem = new System.Windows.Forms.Button();
             this.grbHienThi = new System.Windows.Forms.GroupBox();
+            this.cbbDestCity = new System.Windows.Forms.ComboBox();
+            this.cbbSourceCity = new System.Windows.Forms.ComboBox();
             this.txtPrice = new System.Windows.Forms.TextBox();
             this.lblAirline = new System.Windows.Forms.Label();
             this.txtDuration = new System.Windows.Forms.TextBox();
@@ -47,17 +50,15 @@
             this.lblFlightId = new System.Windows.Forms.Label();
             this.pnlMain = new System.Windows.Forms.Panel();
             this.dgvFlight = new System.Windows.Forms.DataGridView();
-            this.btnTimKiem = new System.Windows.Forms.Button();
-            this.txtSearch = new System.Windows.Forms.TextBox();
-            this.lblListFlights = new System.Windows.Forms.Label();
             this.flight_id = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.source_city_id = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dest_city_id = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.price = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.duration = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.airline = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.cbbSourceCity = new System.Windows.Forms.ComboBox();
-            this.cbbDestCity = new System.Windows.Forms.ComboBox();
+            this.btnTimKiem = new System.Windows.Forms.Button();
+            this.txtSearch = new System.Windows.Forms.TextBox();
+            this.lblListFlights = new System.Windows.Forms.Label();
             this.pnlFooter.SuspendLayout();
             this.grbChucNang.SuspendLayout();
             this.grbHienThi.SuspendLayout();
@@ -70,9 +71,9 @@
             this.pnlFooter.Controls.Add(this.grbChucNang);
             this.pnlFooter.Controls.Add(this.grbHienThi);
             this.pnlFooter.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.pnlFooter.Location = new System.Drawing.Point(0, 498);
+            this.pnlFooter.Location = new System.Drawing.Point(0, 621);
             this.pnlFooter.Name = "pnlFooter";
-            this.pnlFooter.Size = new System.Drawing.Size(1127, 232);
+            this.pnlFooter.Size = new System.Drawing.Size(1282, 232);
             this.pnlFooter.TabIndex = 0;
             // 
             // grbChucNang
@@ -83,9 +84,9 @@
             this.grbChucNang.Controls.Add(this.btnThem);
             this.grbChucNang.Dock = System.Windows.Forms.DockStyle.Fill;
             this.grbChucNang.Font = new System.Drawing.Font("Times New Roman", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.grbChucNang.Location = new System.Drawing.Point(739, 0);
+            this.grbChucNang.Location = new System.Drawing.Point(865, 0);
             this.grbChucNang.Name = "grbChucNang";
-            this.grbChucNang.Size = new System.Drawing.Size(388, 232);
+            this.grbChucNang.Size = new System.Drawing.Size(417, 232);
             this.grbChucNang.TabIndex = 3;
             this.grbChucNang.TabStop = false;
             this.grbChucNang.Text = "Chức năng";
@@ -156,16 +157,32 @@
             this.grbHienThi.Font = new System.Drawing.Font("Times New Roman", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.grbHienThi.Location = new System.Drawing.Point(0, 0);
             this.grbHienThi.Name = "grbHienThi";
-            this.grbHienThi.Size = new System.Drawing.Size(739, 232);
+            this.grbHienThi.Size = new System.Drawing.Size(865, 232);
             this.grbHienThi.TabIndex = 2;
             this.grbHienThi.TabStop = false;
             this.grbHienThi.Text = "Thông tin chuyến bay";
             // 
+            // cbbDestCity
+            // 
+            this.cbbDestCity.FormattingEnabled = true;
+            this.cbbDestCity.Location = new System.Drawing.Point(253, 135);
+            this.cbbDestCity.Name = "cbbDestCity";
+            this.cbbDestCity.Size = new System.Drawing.Size(241, 34);
+            this.cbbDestCity.TabIndex = 13;
+            // 
+            // cbbSourceCity
+            // 
+            this.cbbSourceCity.FormattingEnabled = true;
+            this.cbbSourceCity.Location = new System.Drawing.Point(253, 89);
+            this.cbbSourceCity.Name = "cbbSourceCity";
+            this.cbbSourceCity.Size = new System.Drawing.Size(241, 34);
+            this.cbbSourceCity.TabIndex = 12;
+            // 
             // txtPrice
             // 
-            this.txtPrice.Location = new System.Drawing.Point(592, 81);
+            this.txtPrice.Location = new System.Drawing.Point(682, 81);
             this.txtPrice.Name = "txtPrice";
-            this.txtPrice.Size = new System.Drawing.Size(128, 34);
+            this.txtPrice.Size = new System.Drawing.Size(177, 34);
             this.txtPrice.TabIndex = 11;
             // 
             // lblAirline
@@ -179,15 +196,15 @@
             // 
             // txtDuration
             // 
-            this.txtDuration.Location = new System.Drawing.Point(592, 32);
+            this.txtDuration.Location = new System.Drawing.Point(682, 32);
             this.txtDuration.Name = "txtDuration";
-            this.txtDuration.Size = new System.Drawing.Size(128, 34);
+            this.txtDuration.Size = new System.Drawing.Size(177, 34);
             this.txtDuration.TabIndex = 9;
             // 
             // lblDuration
             // 
             this.lblDuration.AutoSize = true;
-            this.lblDuration.Location = new System.Drawing.Point(470, 40);
+            this.lblDuration.Location = new System.Drawing.Point(560, 40);
             this.lblDuration.Name = "lblDuration";
             this.lblDuration.Size = new System.Drawing.Size(107, 26);
             this.lblDuration.TabIndex = 8;
@@ -197,20 +214,20 @@
             // 
             this.txtAirline.Location = new System.Drawing.Point(253, 183);
             this.txtAirline.Name = "txtAirline";
-            this.txtAirline.Size = new System.Drawing.Size(196, 34);
+            this.txtAirline.Size = new System.Drawing.Size(241, 34);
             this.txtAirline.TabIndex = 7;
             // 
             // txtFlightId
             // 
             this.txtFlightId.Location = new System.Drawing.Point(253, 40);
             this.txtFlightId.Name = "txtFlightId";
-            this.txtFlightId.Size = new System.Drawing.Size(128, 34);
+            this.txtFlightId.Size = new System.Drawing.Size(173, 34);
             this.txtFlightId.TabIndex = 4;
             // 
             // lblPrice
             // 
             this.lblPrice.AutoSize = true;
-            this.lblPrice.Location = new System.Drawing.Point(470, 84);
+            this.lblPrice.Location = new System.Drawing.Point(560, 84);
             this.lblPrice.Name = "lblPrice";
             this.lblPrice.Size = new System.Drawing.Size(50, 26);
             this.lblPrice.TabIndex = 3;
@@ -252,7 +269,7 @@
             this.pnlMain.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pnlMain.Location = new System.Drawing.Point(0, 0);
             this.pnlMain.Name = "pnlMain";
-            this.pnlMain.Size = new System.Drawing.Size(1127, 498);
+            this.pnlMain.Size = new System.Drawing.Size(1282, 621);
             this.pnlMain.TabIndex = 1;
             // 
             // dgvFlight
@@ -268,45 +285,14 @@
             this.duration,
             this.airline});
             this.dgvFlight.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.dgvFlight.Location = new System.Drawing.Point(0, 117);
+            this.dgvFlight.Location = new System.Drawing.Point(0, 116);
             this.dgvFlight.Name = "dgvFlight";
             this.dgvFlight.ReadOnly = true;
             this.dgvFlight.RowHeadersWidth = 51;
             this.dgvFlight.RowTemplate.Height = 24;
-            this.dgvFlight.Size = new System.Drawing.Size(1127, 381);
+            this.dgvFlight.Size = new System.Drawing.Size(1282, 505);
             this.dgvFlight.TabIndex = 7;
             this.dgvFlight.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvFlight_CellClick);
-            // 
-            // btnTimKiem
-            // 
-            this.btnTimKiem.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnTimKiem.Font = new System.Drawing.Font("Times New Roman", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnTimKiem.Location = new System.Drawing.Point(1021, 77);
-            this.btnTimKiem.Name = "btnTimKiem";
-            this.btnTimKiem.Size = new System.Drawing.Size(95, 34);
-            this.btnTimKiem.TabIndex = 6;
-            this.btnTimKiem.Text = "Tìm";
-            this.btnTimKiem.UseVisualStyleBackColor = true;
-            this.btnTimKiem.Click += new System.EventHandler(this.btnTimKiem_Click);
-            // 
-            // txtSearch
-            // 
-            this.txtSearch.Font = new System.Drawing.Font("Times New Roman", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtSearch.Location = new System.Drawing.Point(749, 77);
-            this.txtSearch.Name = "txtSearch";
-            this.txtSearch.Size = new System.Drawing.Size(266, 34);
-            this.txtSearch.TabIndex = 5;
-            // 
-            // lblListFlights
-            // 
-            this.lblListFlights.AutoSize = true;
-            this.lblListFlights.Font = new System.Drawing.Font("Times New Roman", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblListFlights.ForeColor = System.Drawing.Color.LightCoral;
-            this.lblListFlights.Location = new System.Drawing.Point(345, 9);
-            this.lblListFlights.Name = "lblListFlights";
-            this.lblListFlights.Size = new System.Drawing.Size(477, 35);
-            this.lblListFlights.TabIndex = 4;
-            this.lblListFlights.Text = "DANH SÁCH CÁC CHUYẾN BAY";
             // 
             // flight_id
             // 
@@ -362,29 +348,45 @@
             this.airline.Name = "airline";
             this.airline.ReadOnly = true;
             // 
-            // cbbSourceCity
+            // btnTimKiem
             // 
-            this.cbbSourceCity.FormattingEnabled = true;
-            this.cbbSourceCity.Location = new System.Drawing.Point(253, 89);
-            this.cbbSourceCity.Name = "cbbSourceCity";
-            this.cbbSourceCity.Size = new System.Drawing.Size(196, 34);
-            this.cbbSourceCity.TabIndex = 12;
+            this.btnTimKiem.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnTimKiem.Font = new System.Drawing.Font("Times New Roman", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnTimKiem.Location = new System.Drawing.Point(1171, 61);
+            this.btnTimKiem.Name = "btnTimKiem";
+            this.btnTimKiem.Size = new System.Drawing.Size(95, 34);
+            this.btnTimKiem.TabIndex = 6;
+            this.btnTimKiem.Text = "Tìm";
+            this.btnTimKiem.UseVisualStyleBackColor = true;
+            this.btnTimKiem.Click += new System.EventHandler(this.btnTimKiem_Click);
             // 
-            // cbbDestCity
+            // txtSearch
             // 
-            this.cbbDestCity.FormattingEnabled = true;
-            this.cbbDestCity.Location = new System.Drawing.Point(253, 135);
-            this.cbbDestCity.Name = "cbbDestCity";
-            this.cbbDestCity.Size = new System.Drawing.Size(196, 34);
-            this.cbbDestCity.TabIndex = 13;
+            this.txtSearch.Font = new System.Drawing.Font("Times New Roman", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtSearch.Location = new System.Drawing.Point(899, 61);
+            this.txtSearch.Name = "txtSearch";
+            this.txtSearch.Size = new System.Drawing.Size(266, 34);
+            this.txtSearch.TabIndex = 5;
+            // 
+            // lblListFlights
+            // 
+            this.lblListFlights.AutoSize = true;
+            this.lblListFlights.Font = new System.Drawing.Font("Times New Roman", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblListFlights.ForeColor = System.Drawing.Color.LightCoral;
+            this.lblListFlights.Location = new System.Drawing.Point(437, 9);
+            this.lblListFlights.Name = "lblListFlights";
+            this.lblListFlights.Size = new System.Drawing.Size(477, 35);
+            this.lblListFlights.TabIndex = 4;
+            this.lblListFlights.Text = "DANH SÁCH CÁC CHUYẾN BAY";
             // 
             // frmListFlights
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1127, 730);
+            this.ClientSize = new System.Drawing.Size(1282, 853);
             this.Controls.Add(this.pnlMain);
             this.Controls.Add(this.pnlFooter);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "frmListFlights";
             this.Text = "DANH SÁCH CHUYẾN BAY";
             this.Load += new System.EventHandler(this.frmListFlights_Load);

@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmListCities));
             this.pnlFooter = new System.Windows.Forms.Panel();
             this.grbChucNang = new System.Windows.Forms.GroupBox();
             this.btnThoat = new System.Windows.Forms.Button();
@@ -70,9 +71,9 @@
             this.pnlFooter.Controls.Add(this.grbChucNang);
             this.pnlFooter.Controls.Add(this.grbHienThi);
             this.pnlFooter.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.pnlFooter.Location = new System.Drawing.Point(0, 478);
+            this.pnlFooter.Location = new System.Drawing.Point(0, 635);
             this.pnlFooter.Name = "pnlFooter";
-            this.pnlFooter.Size = new System.Drawing.Size(1072, 218);
+            this.pnlFooter.Size = new System.Drawing.Size(1282, 218);
             this.pnlFooter.TabIndex = 0;
             // 
             // grbChucNang
@@ -83,9 +84,9 @@
             this.grbChucNang.Controls.Add(this.btnThem);
             this.grbChucNang.Dock = System.Windows.Forms.DockStyle.Fill;
             this.grbChucNang.Font = new System.Drawing.Font("Times New Roman", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.grbChucNang.Location = new System.Drawing.Point(687, 0);
+            this.grbChucNang.Location = new System.Drawing.Point(858, 0);
             this.grbChucNang.Name = "grbChucNang";
-            this.grbChucNang.Size = new System.Drawing.Size(385, 218);
+            this.grbChucNang.Size = new System.Drawing.Size(424, 218);
             this.grbChucNang.TabIndex = 1;
             this.grbChucNang.TabStop = false;
             this.grbChucNang.Text = "Chức năng";
@@ -156,22 +157,22 @@
             this.grbHienThi.Font = new System.Drawing.Font("Times New Roman", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.grbHienThi.Location = new System.Drawing.Point(0, 0);
             this.grbHienThi.Name = "grbHienThi";
-            this.grbHienThi.Size = new System.Drawing.Size(687, 218);
+            this.grbHienThi.Size = new System.Drawing.Size(858, 218);
             this.grbHienThi.TabIndex = 0;
             this.grbHienThi.TabStop = false;
             this.grbHienThi.Text = "Thông tin thành phố";
             // 
             // txtLatitude
             // 
-            this.txtLatitude.Location = new System.Drawing.Point(537, 82);
+            this.txtLatitude.Location = new System.Drawing.Point(613, 82);
             this.txtLatitude.Name = "txtLatitude";
-            this.txtLatitude.Size = new System.Drawing.Size(130, 34);
+            this.txtLatitude.Size = new System.Drawing.Size(217, 34);
             this.txtLatitude.TabIndex = 11;
             // 
             // lblLatitude
             // 
             this.lblLatitude.AutoSize = true;
-            this.lblLatitude.Location = new System.Drawing.Point(437, 89);
+            this.lblLatitude.Location = new System.Drawing.Point(513, 89);
             this.lblLatitude.Name = "lblLatitude";
             this.lblLatitude.Size = new System.Drawing.Size(70, 26);
             this.lblLatitude.TabIndex = 10;
@@ -179,15 +180,15 @@
             // 
             // txtLongitude
             // 
-            this.txtLongitude.Location = new System.Drawing.Point(537, 33);
+            this.txtLongitude.Location = new System.Drawing.Point(613, 33);
             this.txtLongitude.Name = "txtLongitude";
-            this.txtLongitude.Size = new System.Drawing.Size(130, 34);
+            this.txtLongitude.Size = new System.Drawing.Size(217, 34);
             this.txtLongitude.TabIndex = 9;
             // 
             // lblLongitude
             // 
             this.lblLongitude.AutoSize = true;
-            this.lblLongitude.Location = new System.Drawing.Point(437, 40);
+            this.lblLongitude.Location = new System.Drawing.Point(513, 40);
             this.lblLongitude.Name = "lblLongitude";
             this.lblLongitude.Size = new System.Drawing.Size(94, 26);
             this.lblLongitude.TabIndex = 8;
@@ -266,14 +267,14 @@
             this.pnlHeader.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pnlHeader.Location = new System.Drawing.Point(0, 0);
             this.pnlHeader.Name = "pnlHeader";
-            this.pnlHeader.Size = new System.Drawing.Size(1072, 478);
+            this.pnlHeader.Size = new System.Drawing.Size(1282, 635);
             this.pnlHeader.TabIndex = 1;
             // 
             // btnTimKiem
             // 
             this.btnTimKiem.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnTimKiem.Font = new System.Drawing.Font("Times New Roman", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnTimKiem.Location = new System.Drawing.Point(965, 77);
+            this.btnTimKiem.Location = new System.Drawing.Point(1172, 64);
             this.btnTimKiem.Name = "btnTimKiem";
             this.btnTimKiem.Size = new System.Drawing.Size(95, 34);
             this.btnTimKiem.TabIndex = 3;
@@ -284,7 +285,7 @@
             // txtSearch
             // 
             this.txtSearch.Font = new System.Drawing.Font("Times New Roman", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtSearch.Location = new System.Drawing.Point(693, 77);
+            this.txtSearch.Location = new System.Drawing.Point(900, 64);
             this.txtSearch.Name = "txtSearch";
             this.txtSearch.Size = new System.Drawing.Size(266, 34);
             this.txtSearch.TabIndex = 2;
@@ -294,7 +295,7 @@
             this.lblListCities.AutoSize = true;
             this.lblListCities.Font = new System.Drawing.Font("Times New Roman", 18F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblListCities.ForeColor = System.Drawing.Color.LightCoral;
-            this.lblListCities.Location = new System.Drawing.Point(310, 9);
+            this.lblListCities.Location = new System.Drawing.Point(439, 18);
             this.lblListCities.Name = "lblListCities";
             this.lblListCities.Size = new System.Drawing.Size(459, 35);
             this.lblListCities.TabIndex = 1;
@@ -313,12 +314,12 @@
             this.latitude,
             this.longitude});
             this.dgvListCities.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.dgvListCities.Location = new System.Drawing.Point(0, 117);
+            this.dgvListCities.Location = new System.Drawing.Point(0, 115);
             this.dgvListCities.Name = "dgvListCities";
             this.dgvListCities.ReadOnly = true;
             this.dgvListCities.RowHeadersWidth = 51;
             this.dgvListCities.RowTemplate.Height = 24;
-            this.dgvListCities.Size = new System.Drawing.Size(1072, 361);
+            this.dgvListCities.Size = new System.Drawing.Size(1282, 520);
             this.dgvListCities.TabIndex = 0;
             this.dgvListCities.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvListCities_CellClick);
             // 
@@ -382,10 +383,12 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1072, 696);
+            this.ClientSize = new System.Drawing.Size(1282, 853);
             this.Controls.Add(this.pnlHeader);
             this.Controls.Add(this.pnlFooter);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "frmListCities";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Danh sách các thành phố";
             this.Load += new System.EventHandler(this.frmListCities_Load);
             this.pnlFooter.ResumeLayout(false);

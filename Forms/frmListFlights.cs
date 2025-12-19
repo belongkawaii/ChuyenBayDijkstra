@@ -112,7 +112,7 @@ namespace ChuyenBayDijkstra.Forms
 
         #endregion
 
-        #region enven click
+        #region Enven Click
 
         //Them vao 1 chuyen bay neu ma chuyen bay chua ton tai
         private void btnThem_Click(object sender, EventArgs e)
