@@ -35,6 +35,7 @@ namespace ChuyenBayDijkstra.Forms
         // ====== MAP CITY_ID ↔ INDEX ======
         // Dijkstra chỉ làm việc với index 0..n-1
         Dictionary<int, int> cityIdToIndex;  // city_id → index
+
         Dictionary<int, int> indexToCityId;  // index → city_id
 
         // ====== KẾT QUẢ DIJKSTRA ======
@@ -45,7 +46,6 @@ namespace ChuyenBayDijkstra.Forms
         // ====== CONSTRUCTOR ======
         public MenuFlight()
         {
-            // Hàm mặc định của WinForms
             InitializeComponent();
         }
 
@@ -69,20 +69,16 @@ namespace ChuyenBayDijkstra.Forms
         // ====== LOAD DATA TỪ DATABASE ======
         private void LoadDataFromDatabase()
         {
-            // DataContext (LINQ to SQL)
             FlightDijkstraDataContext db = new FlightDijkstraDataContext();
-
-            // Map DB.City → City (domain object)
             cities = db.Cities.Select(c => new City
             {
                 Id = c.city_id,
                 Name = c.name,
-                Latitude = c.latitude ?? 0,   // Null-safe
-                Longitude = c.longitude ?? 0
+                Latitude = c.latitude ?? 0, // Sử dụng 0 nếu null
+                Longitude = c.longitude ?? 0 
             }).ToList();
 
-            // Map DB.Flight → Flight (domain object)
-            flights = db.Flights.Select(f => new Flight
+            flights = db.Flights.Select(f => new Flight 
             {
                 FlightId = f.flight_id,
                 SourceCityId = f.source_city_id,
@@ -236,7 +232,7 @@ namespace ChuyenBayDijkstra.Forms
 
         #region Drawing
         // ====== CHUYỂN LAT/LON → TỌA ĐỘ PANEL ======
-        private PointF ConvertToPanel(double lat, double lon)
+        private PointF ConvertToPanel(double lat, double lon)  // lay kinh do va vi do
         {
             float x = (float)((lon + 180) / 360f * panelHeader.Width);
             float y = (float)((90 - lat) / 180f * panelHeader.Height);
@@ -246,7 +242,7 @@ namespace ChuyenBayDijkstra.Forms
         // ====== VẼ PANEL ======
         private void panelHeader_Paint(object sender, PaintEventArgs e)
         {
-            Graphics g = e.Graphics;
+            Graphics g = e.Graphics; 
             g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
 
             // Flight thường (xanh + giá tiền xoay theo đường)
@@ -265,8 +261,6 @@ namespace ChuyenBayDijkstra.Forms
                 float midX = (p1.X + p2.X) / 2;
                 float midY = (p1.Y + p2.Y) / 2;
 
-                // Tính góc nghiêng của đoạn thẳng
-                float angle = (float)(Math.Atan2(p2.Y - p1.Y, p2.X - p1.X) * 180 / Math.PI);
 
                 string text = f.Price.ToString("N0");
 
@@ -276,11 +270,9 @@ namespace ChuyenBayDijkstra.Forms
                 // Dịch gốc tọa độ tới trung điểm
                 g.TranslateTransform(midX, midY);
 
-                // Xoay theo góc đoạn thẳng
-                g.RotateTransform(angle);
 
                 // Vẽ chữ (không nền)
-                using (Font boldFont = new Font(Font, FontStyle.Bold))
+                using (Font boldFont = new Font(Font, FontStyle.Bold)) 
                 {
                     g.DrawString(
                         text,
@@ -359,7 +351,7 @@ namespace ChuyenBayDijkstra.Forms
         {
             btnClean_Click(sender, e);
             frmListCities frm = new frmListCities();
-            frm.FormClosing += Frm_FormClosing;
+            frm.FormClosing += Frm_FormClosing; 
             frm.Show();
             this.Hide();
 
@@ -472,7 +464,5 @@ namespace ChuyenBayDijkstra.Forms
             Close();
         }
         #endregion
-
-        
     }
 }
