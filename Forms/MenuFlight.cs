@@ -47,13 +47,15 @@ namespace ChuyenBayDijkstra.Forms
 
 
         // ====== ANIMATION ======
-        Timer animationTimer;
+        Timer animationTimer; 
         int currentSegment = 0;      // đang đi đoạn nào
         float t = 0f;                // 0 → 1 (tiến trình trên đoạn)
         PointF planePosition;        // vị trí máy bay
 
         List<Tuple<int, int>> drawnSegments = new List<Tuple<int, int>>(); // đoạn đã vẽ đỏ
-        Image planeImage;
+        Image planeImage;// hình máy bay
+        float planeAngle = 0f; // góc xoay máy bay (độ)
+        bool isFlip = false; // có lật ảnh hay không
 
         #endregion
 
@@ -363,13 +365,27 @@ namespace ChuyenBayDijkstra.Forms
 
             if (animationTimer != null && animationTimer.Enabled)
             {
+                var state = g.Save();
+
+                // Đưa gốc tọa độ về tâm máy bay
+                g.TranslateTransform(planePosition.X, planePosition.Y);
+
+                if (isFlip)
+                {
+                    // Lật ngang ảnh
+                    g.ScaleTransform(-1, 1);
+                }
+
+                // Vẽ ảnh (luôn nằm ngang)
                 g.DrawImage(
                     planeImage,
-                    planePosition.X - 15,
-                    planePosition.Y - 15,
+                    -15,
+                    -15,
                     30,
                     30
                 );
+
+                g.Restore(state);
             }
         }
 
@@ -401,6 +417,18 @@ namespace ChuyenBayDijkstra.Forms
 
             PointF p1 = ConvertToPanel(from.Latitude, from.Longitude);
             PointF p2 = ConvertToPanel(to.Latitude, to.Longitude);
+
+            // ====== TÍNH GÓC XOAY ======
+            float dx = p2.X - p1.X;
+            float dy = p2.Y - p1.Y;
+
+            // Nếu bay từ phải sang trái → flip
+            isFlip = dx < 0;
+
+
+            // atan2 trả về radian → đổi sang độ
+            planeAngle = (float)(Math.Atan2(dy, dx) * 180 / Math.PI);
+
 
             // Nội suy vị trí
             planePosition = new PointF(
@@ -565,7 +593,10 @@ namespace ChuyenBayDijkstra.Forms
 
         private void btnExit_Click(object sender, EventArgs e)
         {
-            Close();
+            if (DialogResult.Yes == MessageBox.Show(" Bạn có muốn đóng chương trình không?", "Thông báo", MessageBoxButtons.YesNo, MessageBoxIcon.Question))
+            {
+                this.Close();
+            }
         }
         #endregion
     }
