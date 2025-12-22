@@ -28,16 +28,16 @@ CREATE TABLE Flight (
 GO
 
 INSERT INTO City (name, country, airport_code, latitude, longitude) VALUES
-                                                                        ('Hanoi', 'Vietnam', 'HAN', 21.0278, 105.8342),
-                                                                        ('Ho Chi Minh City', 'Vietnam', 'SGN', 10.8231, 106.6297),
-                                                                        ('Tokyo', 'Japan', 'NRT', 35.6895, 139.6917),
-                                                                        ('Singapore', 'Singapore', 'SIN', 1.3521, 103.8198),
-                                                                        ('Bangkok', 'Thailand', 'BKK', 13.7563, 100.5018),
-                                                                        ('Paris', 'France', 'CDG', 48.8566, 2.3522),
-                                                                        ('London', 'United Kingdom', 'LHR', 51.5074, -0.1278),
-                                                                        ('New York', 'USA', 'JFK', 40.7128, -74.0060),
-                                                                        ('Los Angeles', 'USA', 'LAX', 34.0522, -118.2437),
-                                                                        ('Sydney', 'Australia', 'SYD', -33.8688, 151.2093);
+                                                                        ('Brazil', 'Brazil', 'BRA', -20, -90),
+                                                                        ('Ho Chi Minh City', 'Vietnam', 'SGN', 6, 82),
+                                                                        ('Tokyo', 'Japan', 'NRT', 35, 105),
+                                                                        ('Moskva', 'Russia', 'MOS', 65, 50),
+                                                                        ('New Delhi', 'India', 'NDI', 20, 45),
+                                                                        ('Alaska', 'USA', 'ALA', 70, -165),
+                                                                        ('London', 'United Kingdom', 'LHR', 60, -35),
+                                                                        ('New York', 'USA', 'JFK', 40, -130),
+                                                                        ('Nuuk', 'Green Land', 'NUU', 80, -70),
+                                                                        ('Sydney', 'Australia', 'SYD', -40, 110);
 GO
 
 INSERT INTO Flight (source_city_id, dest_city_id, price, duration, airline) VALUES
@@ -45,22 +45,26 @@ INSERT INTO Flight (source_city_id, dest_city_id, price, duration, airline) VALU
 (1, 4, 150, 190, 'Vietnam Airlines'),
 (1, 3, 450, 300, 'All Nippon Airways'),
 (1, 2, 80, 120, 'VietJet Air'),
-(1, 5, 120, 110, 'Thai Airways'),
+(1, 5, 120, 110, 'Emirates'),
 
 -- TP.HCM
 (2, 4, 120, 150, 'Singapore Airlines'),
-(2, 5, 90, 100, 'Thai Airways'),
+(2, 5, 90, 100, 'Emirates'),
 (2, 1, 75, 125, 'Vietnam Airlines'),
+
+-- Tokyo
+(3, 6, 450, 360, 'Air France'),
+(3, 7, 430, 350, 'British Airways'),
+(3, 8, 680, 720, 'United Airlines'),
 
 -- Singapore
 (4, 3, 250, 180, 'Japan Airlines'),
 (4, 6, 520, 380, 'Air France'),
 (4, 7, 500, 400, 'British Airways'),
 
--- Tokyo
-(3, 6, 450, 360, 'Air France'),
-(3, 7, 430, 350, 'British Airways'),
-(3, 8, 680, 720, 'United Airlines'),
+-- New Delhi
+(5, 3, 200, 160, 'Emirates'),
+(5, 4, 180, 140, 'Singapore Airlines'),
 
 -- Paris
 (6, 7, 200, 70, 'British Airways'),
