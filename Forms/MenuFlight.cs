@@ -528,14 +528,31 @@ namespace ChuyenBayDijkstra.Forms
 
         private void btnClean_Click(object sender, EventArgs e)
         {
+            // Reset ComboBox
             cbbStart.SelectedIndex = -1;
             cbbEnd.SelectedIndex = -1;
             cbbAddition.SelectedValue = -1;
+
+            // Reset label
             lblTotalPrice.Text = "$0";
-            shortestPathCityIds.Clear();
-            panelHeader.Invalidate();
             lblLoTrinh.Text = "";
+
+            // ====== CLEAR DATA ======
+            shortestPathCityIds.Clear();
+            drawnSegments.Clear();   // xóa đường đỏ
+
+            // ====== RESET ANIMATION ======
+            if (animationTimer != null)
+                animationTimer.Stop(); // dừng animation
+
+            currentSegment = 0;
+            t = 0f;
+            planePosition = PointF.Empty;
+
+            // Vẽ lại panel
+            panelHeader.Invalidate();
         }
+
 
         private void btnAddFlight_Click(object sender, EventArgs e)
         {
