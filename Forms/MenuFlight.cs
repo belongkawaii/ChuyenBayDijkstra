@@ -41,12 +41,27 @@ namespace ChuyenBayDijkstra.Forms
         // ====== KẾT QUẢ DIJKSTRA ======
         // Danh sách city_id theo thứ tự đường đi ngắn nhất
         List<int> shortestPathCityIds = new List<int>();
+
+        string finalRouteText = ""; // chuỗi lộ trình
+        double finalTotalCost = 0; // tổng chi phí
+
+
+        // ====== ANIMATION ======
+        Timer animationTimer;
+        int currentSegment = 0;      // đang đi đoạn nào
+        float t = 0f;                // 0 → 1 (tiến trình trên đoạn)
+        PointF planePosition;        // vị trí máy bay
+
+        List<Tuple<int, int>> drawnSegments = new List<Tuple<int, int>>(); // đoạn đã vẽ đỏ
+        Image planeImage;
+
         #endregion
 
         // ====== CONSTRUCTOR ======
         public MenuFlight()
         {
             InitializeComponent();
+            planeImage = Properties.Resources.Planet;
         }
 
         // ====== SỰ KIỆN FORM LOAD ======
@@ -63,6 +78,8 @@ namespace ChuyenBayDijkstra.Forms
 
             cbbStart.SelectedIndex = -1;
             cbbEnd.SelectedIndex = -1;
+
+            InitAnimationTimer();
         }
 
         #region Load Data
@@ -291,13 +308,11 @@ namespace ChuyenBayDijkstra.Forms
                 g.Restore(state);
             }
 
-
-
-            // Vẽ đường đi ngắn nhất (màu đỏ + giá tiền)
-            for (int i = 0; i < shortestPathCityIds.Count - 1; i++)
+            // ====== VẼ CÁC ĐOẠN ĐÃ BAY QUA (ĐƯỜNG ĐỎ + GIÁ TIỀN) ======
+            foreach (var seg in drawnSegments)
             {
-                int fromId = shortestPathCityIds[i];
-                int toId = shortestPathCityIds[i + 1];
+                int fromId = seg.Item1;
+                int toId = seg.Item2;
 
                 City a = cities.First(c => c.Id == fromId);
                 City b = cities.First(c => c.Id == toId);
@@ -306,19 +321,21 @@ namespace ChuyenBayDijkstra.Forms
                 PointF p2 = ConvertToPanel(b.Latitude, b.Longitude);
 
                 // Vẽ đường đỏ
-                g.DrawLine(new Pen(Color.Red, 3), p1, p2);
+                using (Pen redPen = new Pen(Color.Red, 3))
+                {
+                    g.DrawLine(redPen, p1, p2);
+                }
 
-                // Lấy giá tiền
+                // ====== GIÁ TIỀN ======
                 double price = GetFlightPrice(fromId, toId);
+                string text = price.ToString("N0");
 
-                // Tính trung điểm
                 float midX = (p1.X + p2.X) / 2;
                 float midY = (p1.Y + p2.Y) / 2;
 
-                // Nền trắng để chữ dễ nhìn
-                string text = price.ToString("N0");
                 SizeF size = g.MeasureString(text, Font);
 
+                // Nền trắng cho dễ nhìn
                 g.FillRectangle(
                     Brushes.White,
                     midX - size.Width / 2,
@@ -335,6 +352,7 @@ namespace ChuyenBayDijkstra.Forms
                     midY - size.Height / 2);
             }
 
+
             // Vẽ thành phố
             foreach (var c in cities)
             {
@@ -342,6 +360,72 @@ namespace ChuyenBayDijkstra.Forms
                 g.FillEllipse(Brushes.Red, p.X - 4, p.Y - 4, 18, 18);
                 g.DrawString(c.Name, Font, Brushes.Black, p.X + 5, p.Y + 5);
             }
+
+            if (animationTimer != null && animationTimer.Enabled)
+            {
+                g.DrawImage(
+                    planeImage,
+                    planePosition.X - 15,
+                    planePosition.Y - 15,
+                    30,
+                    30
+                );
+            }
+        }
+
+        // ====== ANIMATION FLY ======
+
+
+        #endregion
+
+        #region ANIMATION
+        private void AnimationTimer_Tick(object sender, EventArgs e)
+        {
+            if (currentSegment >= shortestPathCityIds.Count - 1)
+            {
+                animationTimer.Stop();
+
+                MessageBox.Show(
+                    $"Lộ trình:\n{finalRouteText}\n\nTổng chi phí: ${finalTotalCost:N0}",
+                    "Kết quả tìm đường",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Information
+                );
+
+                return;
+            }
+
+
+            City from = cities.First(c => c.Id == shortestPathCityIds[currentSegment]);
+            City to = cities.First(c => c.Id == shortestPathCityIds[currentSegment + 1]);
+
+            PointF p1 = ConvertToPanel(from.Latitude, from.Longitude);
+            PointF p2 = ConvertToPanel(to.Latitude, to.Longitude);
+
+            // Nội suy vị trí
+            planePosition = new PointF(
+                p1.X + (p2.X - p1.X) * t,
+                p1.Y + (p2.Y - p1.Y) * t
+            );
+
+            t += 0.02f;
+
+            // Khi đi hết đoạn
+            if (t >= 1f)
+            {
+                t = 0f;
+                drawnSegments.Add(Tuple.Create(from.Id, to.Id));
+                currentSegment++;
+            }
+
+            panelHeader.Invalidate();
+        }
+
+        private void InitAnimationTimer()
+        {
+            animationTimer = new Timer();
+            animationTimer.Interval = 30; // càng nhỏ càng mượt
+            animationTimer.Tick += AnimationTimer_Tick;
         }
         #endregion
 
@@ -423,19 +507,22 @@ namespace ChuyenBayDijkstra.Forms
 
             shortestPathCityIds = path;
 
-            double totalCost = CalculateTotalCost(path);
-            string routeText = BuildRouteText(path);
+            finalTotalCost = CalculateTotalCost(path);
+            finalRouteText = BuildRouteText(path);
 
-            lblTotalPrice.Text = "$" + totalCost.ToString("N0");
-            lblLoTrinh.Text = routeText;
+            lblTotalPrice.Text = "$" + finalTotalCost.ToString("N0");
+            lblLoTrinh.Text = finalRouteText;
 
-            MessageBox.Show(
-                $"Lộ trình:\n{routeText}\n\nTổng chi phí: ${totalCost:N0}",
-                "Kết quả tìm đường",
-                MessageBoxButtons.OK,
-                MessageBoxIcon.Information);
+            drawnSegments.Clear();
+            currentSegment = 0;
+            t = 0f;
 
-            panelHeader.Invalidate();
+            // đặt máy bay ở điểm xuất phát
+            City startCity = cities.First(c => c.Id == shortestPathCityIds[0]);
+            planePosition = ConvertToPanel(startCity.Latitude, startCity.Longitude);
+
+            animationTimer.Start();
+
         }
 
 

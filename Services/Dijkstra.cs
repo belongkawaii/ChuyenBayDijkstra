@@ -93,9 +93,11 @@ namespace ChuyenBayDijkstra.Services
             return path;
         }
 
+        /*
         public double GetDistance(int end)
         {
             return dist[end];
         }
+        */
     }
 }
